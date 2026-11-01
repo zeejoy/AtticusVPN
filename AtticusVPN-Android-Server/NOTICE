@@ -1,0 +1,40 @@
+AtticusVPN Android Server
+Copyright 2026 TianzeL
+
+Project-owned source code and documentation are licensed under the Apache
+License, Version 2.0. This NOTICE is informational and does not change the
+terms of any license. Third-party code and tools retain their own licenses.
+
+WireGuard Android tunnel 1.0.20260102:
+Copyright 2017-2025 WireGuard LLC. All Rights Reserved.
+The Curve25519 Java implementation also retains:
+Copyright 2016 Southern Storm Software, Pty Ltd.
+Licensed under Apache-2.0; see LICENSES/WireGuard-Android-COPYING.txt.
+
+wireguard-go:
+Copyright (C) 2017-2025 WireGuard LLC. All Rights Reserved.
+Licensed under MIT; see LICENSES/wireguard-go-MIT.txt.
+
+Go and golang.org/x modules:
+Copyright 2009 The Go Authors.
+BSD-3-Clause and accompanying patent grants; see LICENSES/Go-*.txt.
+
+gVisor and google/btree retain their original Apache-2.0 and any applicable
+file-specific terms; see LICENSES/gVisor-LICENSE.txt and
+LICENSES/google-btree-Apache-2.0.txt.
+
+ZXing retains its original license and notices, including upstream
+attributions; see LICENSES/ZXing-LICENSE.txt and LICENSES/ZXing-NOTICE.txt.
+
+Kotlin standard library retains JetBrains and contributor copyrights;
+see LICENSES/Kotlin-COPYRIGHT.txt and LICENSES/Kotlin-LICENSE.txt.
+JetBrains annotations 13.0: Copyright 2000-2012 JetBrains s.r.o.
+See LICENSES/JetBrains-annotations-Apache-2.0.txt.
+
+desugar_jdk_libs retains its upstream GPLv2 with the Classpath Exception,
+assembly exception and additional licensing information. These terms are
+not replaced by the AtticusVPN Apache-2.0 license.
+
+See THIRD_PARTY_NOTICES.md and LICENSES/README.md for exact versions,
+scope, sources and test/build-only components. No upstream project is
+represented as endorsing this project.

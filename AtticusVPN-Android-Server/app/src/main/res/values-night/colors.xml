@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <color name="atticus_surface">#121820</color>
+    <color name="black">#F9FAFB</color>
+    <color name="atticus_secondary">#C2CBD6</color>
+    <color name="atticus_card">#202A35</color>
+    <color name="terminal_background">#000000</color>
+    <color name="terminal_text">#FFFFFF</color>
+    <color name="terminal_border">#5A6672</color>
+    <color name="terminal_scroll_track">#303840</color>
+    <color name="navigation_border">#3C4858</color>
+    <color name="navigation_selected">#007FFF</color>
+    <color name="navigation_selected_text">#FFFFFF</color>
+</resources>

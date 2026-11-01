@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="atticus_navy">#10243A</color>
+    <color name="atticus_blue">#2C6BED</color>
+    <color name="atticus_teal">#18A999</color>
+    <color name="atticus_surface">#F4F7FB</color>
+    <color name="black">#111827</color>
+    <color name="atticus_secondary">#4B5563</color>
+    <color name="atticus_card">#FFFFFF</color>
+    <color name="terminal_background">#FFFFFF</color>
+    <color name="terminal_text">#000000</color>
+    <color name="terminal_border">#00000000</color>
+    <color name="terminal_scroll_track">#E5E7EB</color>
+    <color name="navigation_border">#D0D9E4</color>
+    <color name="navigation_selected">#007FFF</color>
+    <color name="navigation_selected_text">#FFFFFF</color>
+</resources>

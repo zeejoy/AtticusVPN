@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<!-- API 24–25：保留原图白底，不改变图片像素，系统按启动图标大小绘制。 -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
+    <item>
+        <inset android:insetLeft="4%" android:insetTop="4%"
+            android:insetRight="4%" android:insetBottom="4%">
+            <bitmap android:src="@drawable/app_launcher_art" android:gravity="fill"
+                android:filter="true" />
+        </inset>
+    </item>
+</layer-list>

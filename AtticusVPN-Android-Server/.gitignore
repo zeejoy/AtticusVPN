@@ -1,0 +1,50 @@
+# Copyright 2026 TianzeL
+# SPDX-License-Identifier: Apache-2.0
+.gradle/
+**/.gradle/
+**/build/
+.idea/
+*.iml
+local.properties
+**/local.properties
+.android/
+**/.android/
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.pem
+*.key
+*.log
+*.dmp
+*.apk
+*.aab
+*.aar
+*.so
+*.exe
+*.dll
+__pycache__/
+*.pyc
+exports/
+artifacts/
+private/
+release-output/
+.env
+.env.*
+!.env.example
+
+# Android native build caches
+**/.cxx/
+**/.externalNativeBuild/
+
+# Visual Studio temporary files
+.vs/
+*.suo
+*.user
+
+# Additional private key formats
+*.p8
+
+# System temporary files
+Thumbs.db
+.DS_Store
