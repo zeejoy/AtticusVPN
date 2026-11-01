@@ -159,7 +159,7 @@ function Patch-MobileForPrivacy {
 		goBin = filepath.Join(runtime.GOROOT(), "bin")
 	}
 	goPath := goBin + string(os.PathListSeparator) + os.Getenv("PATH")
-	cmd.Env = append(os.Environ(), "PATH="+goPath, "GOOS=android", "CGO_ENABLED=1")
+	cmd.Env = append(cmd.Env, "PATH="+goPath, "GOOS=android", "CGO_ENABLED=1")
 '@
     $text = Replace-ExactlyOnce -Text $text -Old $oldEnvironment -New $newEnvironment `
         -Description 'gobind child environment'
