@@ -62,6 +62,7 @@ android {
         warningsAsErrors = true
         // 直接依赖使用固定版本；关闭联网“最新版本”检查，不声称全部 Maven 传递依赖已有哈希锁定。
         disable += "NewerVersionAvailable"
+        disable += "OldTargetApi"
     }
 
     testOptions {
