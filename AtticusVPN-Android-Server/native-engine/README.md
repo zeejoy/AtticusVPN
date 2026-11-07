@@ -10,7 +10,7 @@
 
 | 输入 | 固定版本 |
 |---|---|
-| Go | 1.27.0 |
+| Go | 1.27.3 |
 | JDK | 17；脚本检查 `javac` 主版本 |
 | Android SDK Platform | 36 |
 | Android NDK | 29.0.14206865（r29） |
@@ -87,3 +87,9 @@ go vet ./...
 `integration_test.go` 在本机使用另一个官方 wireguard-go Device，通过回环 UDP 建立标准握手，再验证 TCP、UDP、DNS 和 DNS TCP 回退；还有 IPv6 回环入口测试。这些不证明 Android 真机的前台服务、省电、网络切换、公网 IPv6 入站或运营商策略。
 
 当前数据面仅转发 IPv4 TCP/UDP；不转发 IPv6 互联网流量、ICMP、任意 IP 协议、二层广播或入站端口映射。Endpoint 可使用手机公网 IPv6，但两端必须有 IPv6，路由器／运营商必须允许 UDP 入站。界面中的 IKEv2 能力检测不等于已集成 strongSwan 服务。
+
+## STABLE 0.6.0 P1-20261103 TCP 资源与关闭语义
+
+待拨号和已建立 TCP 共用全局 512、每 Peer 64 的配额；身份来自已配置 WireGuard 的 AllowedIPs/公钥映射，双栈地址共用配额。正常空闲 15 分钟、单向 FIN 后空闲 2 分钟回收，任一方向有效数据传输会续期。长期闲置 TCP 应使用应用层保活；WireGuard 自身的隧道保活不代表 TCP 应用有数据。
+
+半关闭通过 CloseWrite 独立传播；正常响应可以在请求方向 EOF 后继续返回。异常、取消和服务停止关闭套接字并等待复制协程退出，之后才释放配额。不改变标准 WireGuard 或配置文件格式。

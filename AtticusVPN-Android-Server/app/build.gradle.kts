@@ -17,8 +17,8 @@ android {
         applicationId = "dev.lan.atticusvpn.server"
         minSdk = 24
         targetSdk = 36
-        versionCode = 19
-        versionName = "0.5.8"
+        versionCode = 20
+        versionName = "0.6.0"
         testInstrumentationRunner = "dev.lan.atticusvpn.server.RevocationDeviceRunner"
     }
 
@@ -30,9 +30,10 @@ android {
 
     buildFeatures {
         buildConfig = true
+        resValues = true
     }
 
-    // 应用内切换语言时，三种语言资源应始终随应用安装。
+    // 应用内切换语言时，13 种语言资源应始终随应用安装。
     bundle {
         language {
             enableSplit = false
@@ -41,12 +42,15 @@ android {
 
     buildTypes {
         debug {
+            resValue("string", "channel_app_name", "AtticusVPN · TEST")
             // Explicit opt-in keeps device revocation tests away from existing installations.
             applicationIdSuffix = if (providers.gradleProperty("revocationDeviceTest").orNull == "true")
                 ".revocationtest" else ".debug"
-            versionNameSuffix = "-debug"
+            versionNameSuffix = "-test-debug"
         }
         release {
+            versionNameSuffix = "-stable"
+            resValue("string", "channel_app_name", "AtticusVPN · Stable")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -67,6 +71,14 @@ android {
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
+        unitTests.all {
+            // Robolectric's pinned SDK artifacts also use HTTPS through the user's proxy.
+            it.systemProperty("robolectric.dependency.repo.url", "https://repo.maven.apache.org/maven2")
+            listOf("http.proxyHost", "http.proxyPort", "https.proxyHost", "https.proxyPort", "http.nonProxyHosts").forEach { key ->
+                System.getProperty(key)?.let { value -> it.systemProperty(key, value) }
+            }
+            System.getProperty("atticus.glass.previewDir")?.let { value -> it.systemProperty("atticus.glass.previewDir", value) }
+        }
     }
 
     packaging {
@@ -90,6 +102,15 @@ dependencies {
     implementation("com.google.zxing:core:3.5.4")
     implementation(files("libs/atticusengine.aar"))
 
+    // Match the WireGuard dependency annotation version; no runtime dependency upgrade.
+    //noinspection GradleDependency
+    compileOnly("androidx.annotation:annotation:1.9.1")
+    constraints {
+        testImplementation("com.google.guava:guava:33.7.2-jre") {
+            because("GHSA-xxph-c9ww-hj94: constrain Robolectric test-only transitive dependency")
+        }
+    }
+    testImplementation("org.robolectric:robolectric:4.17")
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.json:json:20250517")
 }

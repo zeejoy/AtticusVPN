@@ -1,9 +1,10 @@
 # Copyright (c) 2026 TianzeL
 # SPDX-License-Identifier: Apache-2.0
 
-# 离线测试脚本纯函数：不调用 Go/NDK，不下载、修改缓存、操作手机或运行实际构建。
+# 验证纯函数及实际 Go 子进程环境；固定 x/mobile 模块可从已校验缓存或官方代理读取。
+# 不调用 NDK，不操作手机，不构建 Android AAR。
 [CmdletBinding()]
-param()
+param([string]$GoExe)
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $taskScript = Join-Path $PSScriptRoot '../build-aar.ps1'
@@ -58,11 +59,49 @@ func fixture() {
     Patch-MobileForPrivacy -MobileRoot $taskMobile
     $taskPatched = [IO.File]::ReadAllText((Join-Path $taskCode 'bind_androidapp.go'))
     $taskModulePatched = [IO.File]::ReadAllText((Join-Path $taskCode 'bind.go'))
-    Assert-Test ($taskPatched.Contains('append(os.Environ()')) 'child environment preserved'
+    Assert-Test ($taskPatched.Contains('append(cmd.Env,')) 'child-specific environment overrides preserved'
     Assert-Test ($taskPatched.Contains('"-encoding", "UTF-8"')) 'javac UTF-8'
     Assert-Test ($taskModulePatched.Contains('filepath.Rel(dir, replacement.New.Path)')) 'local replacements relative'
     Assert-Test ($taskModulePatched.Contains('f.AddReplace(')) 'module syntax updated using AddReplace'
     Assert-Test ($taskModulePatched.Contains('AtticusVPN modification')) 'temporary upstream modification marked'
+    # Execute the patched block with the pinned upstream environment merge.
+    # String checks alone cannot establish actual child-process inheritance.
+    $taskGo = Resolve-Executable -Candidate $GoExe -Fallback 'go' -Name 'Go'
+    $taskSource = [IO.File]::ReadAllText($taskScript)
+    $taskPin = [regex]::Match($taskSource, "PinnedMobileVersion = '([^']+)'").Groups[1].Value
+    $taskModuleInfo = (Invoke-Captured -FilePath $taskGo -Arguments @('mod', 'download', '-json',
+        "golang.org/x/mobile@$taskPin") -WorkingDirectory $taskTemp) | ConvertFrom-Json
+    if (-not $taskModuleInfo.Dir) { throw 'Cannot locate the pinned x/mobile source.' }
+    $taskEnvSource = [IO.File]::ReadAllText((Join-Path $taskModuleInfo.Dir 'cmd/gomobile/env.go'))
+    $taskEnvFunction = [regex]::Match($taskEnvSource, '(?s)func environ\(kv \[\]string\) \[\]string \{.*?\n\}').Value
+    $taskPatchedBlock = [regex]::Match($taskPatched, '(?s)\tgoBin :=.*?cmd.Env = append\(cmd.Env,.*?\n').Value
+    Assert-Test ($taskEnvFunction.Length -gt 100 -and $taskPatchedBlock.Length -gt 100) 'pinned executable fixture extracted'
+    $taskGoTest = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'environment_test.go.in'))
+    $taskGoTest = $taskGoTest.Replace('// UPSTREAM_ENVIRON', $taskEnvFunction).Replace('// PATCHED_ENVIRONMENT', $taskPatchedBlock)
+    $taskGoTestFile = Join-Path $taskTemp 'environment_test.go'
+    [IO.File]::WriteAllText($taskGoTestFile, $taskGoTest, [Text.UTF8Encoding]::new($false))
+    Invoke-Checked -FilePath $taskGo -Arguments @('test', '-count=1', '-timeout=30s', '-v', $taskGoTestFile) -WorkingDirectory $taskTemp
+    Assert-Test $true 'real child preserves Android SDK/NDK, CGO, Go flags, selected Go PATH, parent and command overrides'
+
+    # Native progress on stderr must not corrupt a successful JSON response.
+    $taskCaptureFixture = Join-Path $taskTemp 'capture_fixture.go'
+    [IO.File]::WriteAllText($taskCaptureFixture, @'
+package main
+import ("fmt"; "os")
+func main() {
+    fmt.Fprintln(os.Stderr, "PUBLIC_SYNTHETIC_DOWNLOAD_PROGRESS")
+    fmt.Fprintln(os.Stdout, `{"status":"ok"}`)
+    if len(os.Args) > 1 { os.Exit(7) }
+}
+'@, [Text.UTF8Encoding]::new($false))
+    $taskCapturedJson = Invoke-Captured -FilePath $taskGo -Arguments @('run', $taskCaptureFixture) -WorkingDirectory $taskTemp
+    Assert-Test (($taskCapturedJson | ConvertFrom-Json).status -eq 'ok') 'stderr progress does not contaminate JSON stdout'
+    $taskCaptureFailureRejected = $false
+    try {
+        Invoke-Captured -FilePath $taskGo -Arguments @('run', $taskCaptureFixture, 'fail') -WorkingDirectory $taskTemp | Out-Null
+    } catch { $taskCaptureFailureRejected = $true }
+    Assert-Test $taskCaptureFailureRejected 'nonzero native exit remains a failure with separated streams'
+
     $taskRepeatRejected = $false
     try { Patch-MobileForPrivacy -MobileRoot $taskMobile } catch { $taskRepeatRejected = $true }
     Assert-Test $taskRepeatRejected 'pinned patch precondition fails if applied twice'

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="vpn_settings">Настройки VPN</string>
+    <string name="home_receive">Получено  %1$s</string>
+    <string name="home_transmit">Отправлено  %1$s</string>
+    <string name="home_recent_devices">Недавно активные устройства</string>
+    <string name="home_running">Сервер работает</string>
+    <string name="home_stopped">Сервер остановлен</string>
+    <string name="home_starting">Запуск сервера…</string>
+    <string name="home_stopping">Остановка сервера…</string>
+    <string name="home_waiting">Ожидание сети</string>
+    <string name="home_failed">Сервер требует внимания</string>
+    <string name="home_wg_stats_note">Трафик сервера · Активность по недавним рукопожатиям</string>
+    <string name="home_protocol_information">%1$s · Сведения об IP</string>
+</resources>

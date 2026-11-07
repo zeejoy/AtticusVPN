@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">سجل الجلسة الحالية</string>
+    <string name="runtime_log_intro">يسجل عملية التطبيق هذه. تستمر خدمات الخلفية في التسجيل؛ تبدأ عملية جديدة بسجل جديد. يتم تحديث الصفحة كل ثانية. تظل الأجهزة غير المتصلة وعناوين IP التي تمت ملاحظتها والأوقات وحركة المرور النهائية في هذه الجلسة. التخزين محدود. قد تتم إزالة الإدخالات الأقدم بعدد مرئي.  WireGuard ليس لديه حالة اتصال مستمرة: مدتها عبارة عن نافذة مراقبة، وآخر مصافحة ليست أول وقت اتصال.</string>
+    <string name="runtime_log_privacy">يتم إخفاء عناوين IP الخاصة بالجهاز بشكل افتراضي. يتم استبعاد المفاتيح الخاصة وكلمات المرور والرموز والتكوينات الكاملة. يستخدم النسخ والحفظ نفس اللقطة المعروضة حاليًا. عناوين IP الكاملة خاصة: لا تشاركها علنًا. قد يقوم موفري الملفات الخارجيون بعمل نسخة احتياطية من الملفات المصدرة. لقطات الشاشة محظورة في هذه الصفحة.</string>
+    <string name="runtime_log_show_full_ips">إظهار عناوين IP الكاملة للجهاز (هذه الصفحة فقط)</string>
+    <string name="runtime_log_masked">عناوين IP الخاصة بالجهاز مقنعة؛ يستخدم النسخ والحفظ أيضًا الإصدار المقنع.</string>
+    <string name="runtime_log_full_ip_warning">يتضمن العرض والنسخ والحفظ الآن عناوين IP كاملة للجهاز. شارك بعناية.</string>
+    <string name="runtime_log_copy">نسخ السجل الحالي</string>
+    <string name="runtime_log_save">حفظ السجل الحالي بصيغة TXT</string>
+    <string name="runtime_log_copied">تم نسخ لقطة السجل الحالية.</string>
+    <string name="runtime_log_copy_failed">لا يمكن النسخ. أعد المحاولة أو احفظ في ملف.</string>
+    <string name="runtime_log_saved">تم حفظ لقطة السجل التي تم التقاطها عند النقر على \"حفظ\".</string>
+    <string name="runtime_log_save_failed">لا يمكن حفظ السجل. قد يكون موفر الملف غير متوفر، أو قد يكون الإذن مفقودًا، أو قد يتم تجاوز حد التصدير. اختر موقعًا وأعد المحاولة.</string>
+    <string name="runtime_log_export_expired">انتهت صلاحية اللقطة المعلقة أو تم إعادة إنشاء الصفحة. اضغط على حفظ مرة أخرى؛ يستمر التسجيل.</string>
+    <string name="runtime_log_waiting">في انتظار سجلات وقت التشغيل لهذه الجلسة…</string>
+</resources>

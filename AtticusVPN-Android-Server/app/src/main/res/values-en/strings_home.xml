@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="vpn_settings">VPN settings</string>
+    <string name="home_receive">Rx  %1$s</string>
+    <string name="home_transmit">Tx  %1$s</string>
+    <string name="home_recent_devices">Recently active devices</string>
+    <string name="home_running">Server running</string>
+    <string name="home_stopped">Server stopped</string>
+    <string name="home_starting">Starting server…</string>
+    <string name="home_stopping">Stopping server…</string>
+    <string name="home_waiting">Waiting for network</string>
+    <string name="home_failed">Server needs attention</string>
+    <string name="home_wg_stats_note">Server traffic · Activity inferred from recent handshakes</string>
+    <string name="home_protocol_information">%1$s · IP information</string>
+</resources>

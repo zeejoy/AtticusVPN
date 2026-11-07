@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp" android:height="32dp" android:viewportWidth="34" android:viewportHeight="34">
+    <path android:fillColor="@android:color/transparent" android:strokeColor="#263342"
+        android:strokeWidth="2.2" android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M7,3 H25 Q28,3 28,6 V9 Q28,12 25,12 H7 Q4,12 4,9 V6 Q4,3 7,3 Z M7,12 H25 Q28,12 28,15 V18 Q28,21 25,21 H7 Q4,21 4,18 V15 Q4,12 7,12 Z M7,21 H25 Q28,21 28,24 V27 Q28,30 25,30 H7 Q4,30 4,27 V24 Q4,21 7,21 Z M9,7.5 H11 M9,16.5 H11 M9,25.5 H11" />
+</vector>

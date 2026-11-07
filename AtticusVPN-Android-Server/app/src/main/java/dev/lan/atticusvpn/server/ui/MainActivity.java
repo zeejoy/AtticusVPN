@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -64,7 +65,7 @@ import dev.lan.atticusvpn.server.storage.EncryptedStateRepository;
  * <p>界面线程只采集输入和绘制不可变快照；Keystore、配置导出和存储事务全部进入单一
  * 后台线程。任何失败都映射为固定本地化提示，绝不显示异常原文、私钥、PSK 或 DDNS token。</p>
  */
-public final class MainActivity extends LocalizedActivity implements RuntimeStatusStore.Listener {
+public class MainActivity extends LocalizedActivity implements RuntimeStatusStore.Listener {
     private static final int REQUEST_EXPORT = 1701;
     private static final int REQUEST_NOTIFICATIONS = 1702;
     private static final String STATE_PENDING_EXPORT_PEER_ID =
@@ -86,6 +87,8 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
         }
     });
 
+    protected boolean isVpnSettings() { return false; }
+    private ServerDashboardView dashboard;
     private TextView statusView;
     private HomePagesView pages;
     private HomePageNavigation pageNavigation;
@@ -145,19 +148,20 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
         }
         latestRuntime = RuntimeStatusStore.current();
         runtimeFingerprint = informationFingerprint(latestRuntime);
-        setContentView(buildContent());
-        terminal = new TerminalStatusAnimator(statusView);
-        homeInfo = new HomeInfoCollector(this);
+        setContentView(isVpnSettings()?buildVpnSettingsContent():buildContent());
+        if(statusView!=null)terminal = new TerminalStatusAnimator(statusView);
+        if(!isVpnSettings())homeInfo = new HomeInfoCollector(this);
         updateServerControls();
-        RuntimeStatusStore.addListener(this);
-        requestNotificationPermissionIfNeeded();
+        if(!isVpnSettings())requestNotificationPermissionIfNeeded();
         refreshState(true);
     }
 
     @Override protected void onStart() {
         super.onStart();
         homeVisible = true;
-        homeInfo.start(new HomeInfoCollector.Listener() {
+        RuntimeStatusStore.addListener(this);
+        refreshState(false);
+        if(homeInfo!=null)homeInfo.start(new HomeInfoCollector.Listener() {
             @Override public void onSnapshot(HomeInfoCollector.Snapshot snapshot) {
                 // 打字器按当前轮的代号读取快照；检测结果不回写 Service，也不触发新一轮检测。
             }
@@ -168,11 +172,12 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
 
     @Override protected void onStop() {
         homeVisible = false;
+        RuntimeStatusStore.removeListener(this);
         terminalMain.removeCallbacksAndMessages(null);
         pendingTerminalRefresh = false;
         terminalCommands = null;
-        terminal.stop();
-        homeInfo.stop();
+        if(terminal!=null)terminal.stop();
+        if(homeInfo!=null)homeInfo.stop();
         super.onStop();
     }
 
@@ -221,72 +226,16 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
         }
     }
 
-    private View buildContent() {
-        final LinearLayout root = vertical();
-        root.setPadding(dp(18), dp(22), dp(18), dp(16));
-        root.setBackgroundColor(getColor(R.color.atticus_surface));
-
-        final LinearLayout heading = horizontal();
-        // 只替换 AtticusVPN 字样，不显示盾牌 Logo；Server 的原有字号/粗体保持。
-        heading.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        final ImageView wordmark = new ImageView(this);
-        wordmark.setImageDrawable(UiArtwork.load(this, R.drawable.atticus_wordmark));
-        wordmark.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        wordmark.setContentDescription(getString(R.string.brand_wordmark));
-        final LinearLayout.LayoutParams wordmarkLayout = new LinearLayout.LayoutParams(0, dp(40), 1f);
-        wordmarkLayout.setMarginEnd(dp(6));
-        heading.addView(wordmark, wordmarkLayout);
-        final TextView serverTitle = text(getString(R.string.server_wordmark_suffix), 28, true);
-        heading.addView(serverTitle, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        final ImageButton settings = new ImageButton(this);
-        settings.setImageDrawable(UiArtwork.load(this, R.drawable.atticus_settings));
-        settings.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        settings.setPadding(dp(12), dp(12), dp(12), dp(12));
-        settings.setColorFilter(getColor(R.color.black), PorterDuff.Mode.SRC_IN);
-        // 保留平台的无边框按压反馈，但不显示“设置”文字。
-        final android.util.TypedValue selectable = new android.util.TypedValue();
-        getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, selectable, true);
-        settings.setBackgroundResource(selectable.resourceId);
-        settings.setContentDescription(getString(R.string.settings));
-        settings.setOnClickListener(view -> startActivity(new Intent(this, SettingsActivity.class)));
-        final LinearLayout.LayoutParams settingsLayout = new LinearLayout.LayoutParams(dp(48), dp(48));
-        settingsLayout.setMarginStart(dp(6));
-        heading.addView(settings, settingsLayout);
-        root.addView(heading, marginBottom(18));
-
-        pages = new HomePagesView(this);
-        final LinearLayout informationPage = createHomePage();
-        final LinearLayout peersPage = createHomePage();
-        final LinearLayout connectionPage = createHomePage();
-        root.addView(pages, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
-
-        final TerminalStatusView terminalWindow = new TerminalStatusView(this);
-        statusView = terminalWindow.textView();
-        statusView.setText(">");
-        statusView.setTextSize(15);
-        statusView.setTypeface(Typeface.MONOSPACE);
-        statusView.setTextColor(getColor(R.color.terminal_text));
-        statusView.setLineSpacing(dp(3), 1f);
-        statusView.setPadding(dp(16), dp(16), dp(16), dp(16));
-        final GradientDrawable terminalBackground = rounded(getColor(R.color.terminal_background), dp(10));
-        terminalBackground.setStroke(dp(1), getColor(R.color.terminal_border));
-        terminalWindow.setBackground(terminalBackground);
-        // 不把每个字符作为无障碍实时播报，避免连续打断读屏用户。
-        statusView.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_NONE);
-        informationPage.addView(terminalWindow, marginBottom(10));
-
-        final LinearLayout controls = horizontal();
-        toggleServerButton = button(getString(R.string.start_server));
-        toggleServerButton.setOnClickListener(view -> toggleServer());
-        controls.addView(toggleServerButton, weight());
-        checkNetworkButton = button(getString(R.string.check_network));
-        checkNetworkButton.setOnClickListener(view -> requestTerminalRefresh(true, null));
-        controls.addView(checkNetworkButton, weight());
-        informationPage.addView(controls, marginBottom(22));
-
+    private View buildVpnSettingsContent() {
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);
+        final ScrollView scroll=new ScrollView(this);scroll.setFillViewport(true);
+        final LinearLayout content=vertical();content.setPadding(dp(20),dp(16),dp(20),dp(24));
+        content.setBackgroundColor(getColor(R.color.atticus_surface));
+        HomeWindowInsets.install(this,content,dp(20),dp(16),dp(24));
+        BackNavigation.addTo(this,content);
+        content.addView(sectionTitle(getString(R.string.vpn_settings)),marginBottom(16));
         final LinearLayout connectionContent = addCollapsibleSection(
-                connectionPage, R.string.connection_settings, true);
+                content, R.string.connection_settings, true);
         endpointField = input(getString(R.string.endpoint_hint), false);
         addConnectionField(connectionContent, R.string.endpoint_label, R.string.endpoint_help, endpointField);
         portField = numericInput(getString(R.string.port_hint));
@@ -303,7 +252,7 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
         customDnsField = input(getString(R.string.custom_dns_hint), false);
         addConnectionField(connectionContent, R.string.custom_dns_label, R.string.custom_dns_hint, customDnsField);
 
-        final LinearLayout ddnsContent = addCollapsibleSection(connectionPage, R.string.ddns_section, false);
+        final LinearLayout ddnsContent = addCollapsibleSection(content, R.string.ddns_section, false);
         ddnsProviderField = spinner(new String[]{getString(R.string.provider_disabled), "DuckDNS", "Cloudflare", "No-IP", "Dynu", "FreeDNS", getString(R.string.provider_custom)});
         ddnsProviderField.setId(View.generateViewId());
         ddnsProviderField.setSaveEnabled(false);
@@ -343,8 +292,98 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
 
         final Button save = button(getString(R.string.save_settings));
         save.setOnClickListener(view -> saveSettings());
-        connectionPage.addView(save, marginBottom(24));
+        content.addView(save, marginBottom(24));
 
+        scroll.addView(content,matchWrap());
+        return scroll;
+    }
+
+    private void styleHomeButton(Button button,boolean primary) {
+        button.setTextSize(17);button.setTypeface(Typeface.DEFAULT,Typeface.BOLD);
+        button.setMinimumHeight(dp(58));button.setPadding(dp(12),dp(12),dp(12),dp(12));
+        button.setTextColor(getColor(primary?android.R.color.white:R.color.atticus_secondary));
+        button.setBackground(new android.graphics.drawable.RippleDrawable(
+                android.content.res.ColorStateList.valueOf(primary?0x33ffffff:0x18007fff),
+                rounded(getColor(primary?R.color.glass_icon_selected:R.color.home_secondary_button),dp(18)),null));
+        button.setBackgroundTintList(null);
+    }
+
+    private View buildContent() {
+        final LinearLayout root = vertical();
+        root.setPadding(dp(18), dp(22), dp(18), dp(16));
+        root.setBackgroundColor(getColor(R.color.atticus_surface));
+        HomeWindowInsets.install(this,root,dp(18),dp(22),dp(16));
+
+        final LinearLayout heading = horizontal();
+        heading.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        LinearLayout branding=vertical();
+        final ImageView wordmark = new ImageView(this);
+        wordmark.setImageDrawable(UiArtwork.load(this, R.drawable.atticus_wordmark));
+        wordmark.setScaleType(ImageView.ScaleType.FIT_START);
+        wordmark.setContentDescription(getString(R.string.brand_wordmark));
+        branding.addView(wordmark,new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,dp(42)));
+        final TextView serverTitle=text(getString(R.string.server_wordmark_suffix),26,true);
+        serverTitle.setTextColor(getColor(R.color.atticus_secondary));branding.addView(serverTitle);
+        heading.addView(branding,new LinearLayout.LayoutParams(0,ViewGroup.LayoutParams.WRAP_CONTENT,1f));
+        final ImageButton settings = new ImageButton(this);
+        settings.setImageDrawable(UiArtwork.load(this, R.drawable.atticus_settings));
+        settings.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        settings.setPadding(dp(12), dp(12), dp(12), dp(12));
+        settings.setColorFilter(getColor(R.color.black), PorterDuff.Mode.SRC_IN);
+        // 保留平台的无边框按压反馈，但不显示“设置”文字。
+        final android.util.TypedValue selectable = new android.util.TypedValue();
+        getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, selectable, true);
+        settings.setBackgroundResource(selectable.resourceId);
+        settings.setContentDescription(getString(R.string.settings));
+        settings.setOnClickListener(view -> startActivity(new Intent(this, SettingsActivity.class)));
+        final LinearLayout.LayoutParams settingsLayout = new LinearLayout.LayoutParams(dp(48), dp(48));
+        settingsLayout.setMarginStart(dp(6));
+        heading.addView(settings, settingsLayout);
+        root.addView(heading, marginBottom(18));
+
+        pages = new HomePagesView(this);
+        pages.setBackgroundColor(getColor(R.color.atticus_surface));
+        final LinearLayout homePage = createHomePage();
+        final LinearLayout peersPage = createHomePage();
+        final LinearLayout informationPage = createHomePage();
+        final FrameLayout pageRegion = new FrameLayout(this);
+        pageRegion.setClipChildren(false);
+        pageRegion.addView(pages, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        root.addView(pageRegion, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+
+        dashboard=new ServerDashboardView(this);
+        homePage.addView(dashboard,marginBottom(18));
+        informationPage.addView(sectionTitle(getString(R.string.home_protocol_information,"WireGuard")),marginBottom(12));
+
+        final TerminalStatusView terminalWindow = new TerminalStatusView(this);
+        statusView = terminalWindow.textView();
+        statusView.setText(">");
+        statusView.setTextSize(15);
+        statusView.setTypeface(Typeface.MONOSPACE);
+        statusView.setTextColor(getColor(R.color.terminal_text));
+        statusView.setLineSpacing(dp(3), 1f);
+        statusView.setPadding(dp(16), dp(16), dp(16), dp(16));
+        final GradientDrawable terminalBackground = rounded(getColor(R.color.terminal_background), dp(10));
+        terminalBackground.setStroke(dp(1), getColor(R.color.terminal_border));
+        terminalWindow.setBackground(terminalBackground);
+        // 不把每个字符作为无障碍实时播报，避免连续打断读屏用户。
+        statusView.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_NONE);
+        informationPage.addView(terminalWindow, marginBottom(10));
+
+        final LinearLayout controls = vertical();
+        toggleServerButton = button(getString(R.string.start_server));
+        toggleServerButton.setOnClickListener(view -> toggleServer());
+        styleHomeButton(toggleServerButton,true);
+        controls.addView(toggleServerButton,marginBottom(10));
+        checkNetworkButton = button(getString(R.string.check_network));
+        checkNetworkButton.setOnClickListener(view -> requestTerminalRefresh(true, null));
+        styleHomeButton(checkNetworkButton,false);
+        controls.addView(checkNetworkButton,matchWrap());
+        homePage.addView(controls,marginBottom(22));
+        final Button infoCheck=button(getString(R.string.check_network));
+        infoCheck.setOnClickListener(view -> requestTerminalRefresh(true, null));
+        informationPage.addView(infoCheck,marginBottom(12));
         final LinearLayout peerHeader = horizontal();
         peerHeader.addView(sectionTitle(getString(R.string.peer_section)), weight());
         final Button addPeer = button(getString(R.string.add_peer));
@@ -362,10 +401,18 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
         final TextView footer = text(
                 getString(R.string.footer, BuildConfig.VERSION_NAME), 12, false);
         footer.setTextColor(getColor(R.color.atticus_secondary));
-        informationPage.addView(footer, marginTop(24));
+        footer.setGravity(android.view.Gravity.CENTER);
+        homePage.addView(footer, marginTop(24));
 
         pageNavigation = new HomePageNavigation(this);
-        pageNavigation.setListener(index -> pages.select(index));
+        pageNavigation.setListener(new HomePageNavigation.Listener() {
+            @Override public void selected(int index) { pages.select(index); }
+            @Override public void dragStarted() { pages.beginNavigationDrag(); }
+            @Override public void dragged(float position) { pages.dragTo(position); }
+            @Override public void dragFinished(boolean cancelled) { pages.endNavigationDrag(cancelled); }
+        });
+        pages.setProgressListener((position, stretch, dragging) ->
+                pageNavigation.setProgress(position, stretch, dragging));
         pages.setListener(index -> {
             if (index != selectedPage) {
                 // 仅收起输入法，不保存/重载设置；草稿和页内滚动位置保留在原 View。
@@ -377,12 +424,14 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
                 }
             }
             selectedPage = index;
+            if(index==1)drawPeers(latestPeers);
             pageNavigation.select(index);
         });
-        final LinearLayout.LayoutParams navigationLayout = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, dp(56));
-        navigationLayout.setMargins(dp(12), dp(12), dp(12), 0);
-        root.addView(pageNavigation, navigationLayout);
+        final FrameLayout.LayoutParams navigationLayout = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(72), android.view.Gravity.BOTTOM);
+        navigationLayout.setMargins(dp(2), dp(8), dp(2), dp(6));
+        pageRegion.addView(pageNavigation, navigationLayout);
+        pageNavigation.setBackdropSource(pages);
         pages.select(selectedPage);
         return root;
     }
@@ -392,7 +441,8 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
         final ScrollView scroll = new ScrollView(this);
         scroll.setFillViewport(true);
         final LinearLayout content = vertical();
-        content.setPadding(0, 0, 0, dp(12));
+        // Scroll past the floating bar so no final field/action is obscured.
+        content.setPadding(0, 0, 0, dp(92));
         scroll.addView(content, matchWrap());
         pages.addView(scroll, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -408,7 +458,7 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
                     snapshot = UiSnapshot.from(repository.state(), repository);
                 }
                 postToLiveUi(() -> {
-                    if (allowSettingsUpdate || !settingsLoaded) {
+                    if (isVpnSettings() && (allowSettingsUpdate || !settingsLoaded)) {
                         applySettings(snapshot.settings);
                         settingsLoaded = true;
                     }
@@ -517,8 +567,40 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
         }
     }
 
+    private final Map<String,PeerRow> peerRows = new java.util.LinkedHashMap<>();
+    private String peerLayoutKey = "";
+    private record PeerRow(PeerItem peer, TextView traffic, TextView hint, Button seal) { }
+
+    private void updatePeerRows() {
+        final Map<String,RuntimeStatus.PeerRuntime> runtimeByName = new java.util.HashMap<>();
+        for(RuntimeStatus.PeerRuntime runtime:latestRuntime.peers())runtimeByName.put(runtime.name(),runtime);
+        for(PeerRow row:peerRows.values()) {
+            PeerItem peer=row.peer(); RuntimeStatus.PeerRuntime runtime=runtimeByName.get(peer.name);
+            boolean online=runtime!=null&&runtime.isOnline(System.currentTimeMillis()/1000L);
+            String traffic=getString(R.string.peer_traffic,getString(online?R.string.online:R.string.offline),
+                    formatHandshake(runtime==null?0L:runtime.latestHandshakeUnix()),
+                    formatBytes(runtime==null?0L:runtime.receiveBytes()),formatBytes(runtime==null?0L:runtime.transmitBytes()));
+            if(!traffic.contentEquals(row.traffic().getText()))row.traffic().setText(traffic);
+            row.hint().setVisibility(peer.enabled&&latestRuntime.phase()==RuntimeStatus.Phase.RUNNING
+                    &&(runtime==null||runtime.latestHandshakeUnix()==0L)?View.VISIBLE:View.GONE);
+            if(row.seal()!=null) {
+                boolean canSeal=peer.exportable&&exportedThisSession.contains(peer.id)&&runtime!=null&&runtime.latestHandshakeUnix()>0L;
+                row.seal().setEnabled(canSeal);
+                String label=getString(canSeal?R.string.seal:R.string.seal_pending);
+                if(!label.contentEquals(row.seal().getText()))row.seal().setText(label);
+            }
+        }
+    }
+
     private void drawPeers(final List<PeerItem> peers) {
         latestPeers = new ArrayList<>(peers);
+        if(peersContainer==null || !homeVisible || selectedPage!=1)return;
+        StringBuilder key=new StringBuilder();
+        for(PeerItem peer:peers)key.append(peer.id).append('\0').append(peer.name).append('\0')
+                .append(peer.ipv4).append('\0').append(peer.ipv6).append('\0').append(peer.enabled)
+                .append(peer.sealed).append(peer.exportable).append('\n');
+        if(key.toString().equals(peerLayoutKey)&&peersContainer.getChildCount()>0){updatePeerRows();return;}
+        peerLayoutKey=key.toString();peerRows.clear();
         peersContainer.removeAllViews();
         if (peers.isEmpty()) {
             final TextView empty = text(getString(R.string.no_peers), 15, false);
@@ -536,20 +618,11 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
             final TextView address = text(peer.ipv4 + "  /  " + peer.ipv6 + "  ·  " + stateText, 12, false);
             address.setTextColor(getColor(R.color.atticus_secondary));
             card.addView(address);
-            final RuntimeStatus.PeerRuntime runtime = findPeerRuntime(peer.name);
-            final boolean online = runtime != null
-                    && runtime.isOnline(System.currentTimeMillis() / 1000L);
-            final TextView traffic = text(getString(R.string.peer_traffic,
-                    getString(online ? R.string.online : R.string.offline),
-                    formatHandshake(runtime == null ? 0L : runtime.latestHandshakeUnix()),
-                    formatBytes(runtime == null ? 0L : runtime.receiveBytes()),
-                    formatBytes(runtime == null ? 0L : runtime.transmitBytes())), 12, false);
-            traffic.setTextColor(getColor(R.color.atticus_secondary));
-            card.addView(traffic);
-            if (peer.enabled && latestRuntime.phase() == RuntimeStatus.Phase.RUNNING
-                    && (runtime == null || runtime.latestHandshakeUnix() == 0L)) {
-                card.addView(text(getString(R.string.no_handshake_help), 12, false));
-            }
+            final TextView traffic = text("",12,false);
+            traffic.setTextColor(getColor(R.color.atticus_secondary));card.addView(traffic);
+            final TextView hint = text(getString(R.string.no_handshake_help),12,false);
+            card.addView(hint);
+            Button sealButton=null;
 
             // 使用两行等宽操作按钮，避免四个按钮在窄屏或大字体下横向裁切。
             final LinearLayout primaryActions = actionRow();
@@ -562,12 +635,8 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
             export.setOnClickListener(view -> beginExport(peer));
             primaryActions.addView(export, weight());
             if (!peer.sealed) {
-                final boolean canSeal = peer.exportable
-                        && exportedThisSession.contains(peer.id)
-                        && runtime != null
-                        && runtime.latestHandshakeUnix() > 0L;
-                final Button seal = smallButton(canSeal ? getString(R.string.seal) : getString(R.string.seal_pending));
-                seal.setEnabled(canSeal);
+                final Button seal = smallButton(getString(R.string.seal_pending));
+                sealButton=seal;
                 seal.setOnClickListener(view -> confirmSeal(peer));
                 destructiveActions.addView(seal, weight());
             }
@@ -577,8 +646,12 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
             card.addView(primaryActions);
             card.addView(destructiveActions);
             peersContainer.addView(card, marginBottom(10));
+            peerRows.put(peer.id,new PeerRow(peer,traffic,hint,sealButton));
         }
+        updatePeerRows();
     }
+
+
 
     private void saveSettings() {
         final SettingsDraft draft;
@@ -806,7 +879,27 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
                 + "\u0001" + value.ddnsStatus();
     }
 
+    private void updateDashboard() {
+        if(dashboard==null)return;
+        long rx=0,tx=0;int count=0;boolean running,failed;String status,note;
+            running=latestRuntime.phase()==RuntimeStatus.Phase.RUNNING;failed=latestRuntime.phase()==RuntimeStatus.Phase.ERROR;
+            long now=System.currentTimeMillis()/1000L;
+            for(var peer:latestRuntime.peers()) {
+                if(running && peer.isOnline(now))count++;
+                rx=addCounter(rx,peer.receiveBytes());tx=addCounter(tx,peer.transmitBytes());
+            }
+            status=getString(switch(latestRuntime.phase()) {
+                case RUNNING -> R.string.home_running;case STARTING -> R.string.home_starting;
+                case STOPPING -> R.string.home_stopping;case WAITING_NETWORK -> R.string.home_waiting;
+                case ERROR -> R.string.home_failed;default -> R.string.home_stopped;
+            });
+            note=failed?runtimePhaseText(latestRuntime):getString(R.string.home_wg_stats_note);
+        dashboard.show("WireGuard · IPv6",status,running,failed,getString(R.string.home_recent_devices),count,formatBytes(rx),formatBytes(tx),note);
+    }
+    private static long addCounter(long total,long value){return value<0?total:total>Long.MAX_VALUE-value?Long.MAX_VALUE:total+value;}
     private void updateServerControls() {
+        updateDashboard();
+        if(toggleServerButton==null)return;
         if (toggleServerButton == null) return;
         final RuntimeStatus.Phase phase = latestRuntime.phase();
         final boolean stopped = phase == RuntimeStatus.Phase.STOPPED;
@@ -836,6 +929,7 @@ public final class MainActivity extends LocalizedActivity implements RuntimeStat
 
     /** 合并动画期间的外部更新，只留最新的一次；显式点击可立即取消旧轮并重测。 */
     private void requestTerminalRefresh(final boolean immediate, final String command) {
+        if(homeInfo==null||terminal==null)return;
         if (!homeVisible || activityDestroyed || homeInfo == null || terminal == null) return;
         if (!immediate && terminal.isBusy()) {
             pendingTerminalRefresh = true;

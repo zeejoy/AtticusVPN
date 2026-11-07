@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">Log da sessão atual</string>
+    <string name="runtime_log_intro">Registra este processo de aplicativo. Os serviços em segundo plano continuam gravando; um novo processo inicia um novo log. A página é atualizada a cada segundo. Dispositivos desconectados, IPs observados, horários e tráfego final permanecem nesta sessão. O armazenamento é limitado; entradas mais antigas podem ser removidas com uma contagem visível. WireGuard não possui estado de conexão contínua: sua duração é uma janela de observação e o último handshake não é o primeiro tempo de conexão.</string>
+    <string name="runtime_log_privacy">Os IPs dos dispositivos são mascarados por padrão. Chaves privadas, senhas, tokens e configurações completas estão excluídas. Copiar e Salvar usam o mesmo instantâneo exibido atualmente. IPs completos são privados: não compartilhe publicamente. Provedores de arquivos externos podem fazer backup de arquivos exportados. As capturas de tela estão bloqueadas nesta página.</string>
+    <string name="runtime_log_show_full_ips">Mostrar IPs completos do dispositivo (somente nesta página)</string>
+    <string name="runtime_log_masked">Os IPs dos dispositivos são mascarados; Copiar e Salvar também usa a versão mascarada.</string>
+    <string name="runtime_log_full_ip_warning">Exibir, copiar e salvar agora incluem IPs completos do dispositivo. Compartilhe com cuidado.</string>
+    <string name="runtime_log_copy">Copiar log atual</string>
+    <string name="runtime_log_save">Salvar log atual como TXT</string>
+    <string name="runtime_log_copied">Instantâneo de log atual copiado.</string>
+    <string name="runtime_log_copy_failed">Não foi possível copiar. Tente novamente ou salve em um arquivo.</string>
+    <string name="runtime_log_saved">Salvou o instantâneo do log capturado quando Salvar foi tocado.</string>
+    <string name="runtime_log_save_failed">Não foi possível salvar o log. O provedor de arquivo pode estar indisponível, a permissão pode estar faltando ou o limite de exportação pode ser excedido. Escolha um local e tente novamente.</string>
+    <string name="runtime_log_export_expired">O snapshot pendente expirou ou a página foi recriada. Toque em Salvar novamente; a gravação continua.</string>
+    <string name="runtime_log_waiting">Aguardando os registros de tempo de execução desta sessão…</string>
+</resources>

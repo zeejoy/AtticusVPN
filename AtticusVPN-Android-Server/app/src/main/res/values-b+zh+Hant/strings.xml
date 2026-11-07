@@ -3,9 +3,9 @@
 <resources>
     <string name="brand_wordmark">AtticusVPN</string>
     <string name="server_wordmark_suffix">Server</string>
-    <string name="page_information">1，資訊與伺服器控制</string>
+    <string name="page_information">1，首頁與伺服器控制</string>
     <string name="page_peers">2，Peer 裝置管理</string>
-    <string name="page_connection">3，連線與 DDNS 設定</string>
+    <string name="page_connection">3，IP 資訊</string>
     <string name="appearance">外觀</string>
     <string name="appearance_dark">深色</string>
     <string name="appearance_light">淺色</string>
@@ -31,10 +31,9 @@
     <string name="check_root">重新檢查 Root</string>
     <string name="request_root">重新要求 Root 權限</string>
     <string name="root_dialog_title">要求現有 Root 權限並執行唯讀檢查</string>
-    <string name="root_dialog_message">僅確認 uid=0，並讀取 XFRM、UDP 500/4500 使用情況、轉送開關及 SELinux 狀態。不修改路由、防火牆、系統檔案或 SELinux，不停止 WireGuard。此操作包含多項唯讀檢查，Root 管理器可能逐項詢問。本開發版尚不能啟動 IKEv2；授權成功也不代表 IPsec 可用。</string>
+    <string name="root_dialog_message">僅確認 uid=0，並讀取 XFRM、UDP 500/4500 使用情況、轉送開關及 SELinux 狀態。不修改路由、防火牆、系統檔案或 SELinux，不停止 WireGuard。Root 管理器可能逐項詢問。本次檢查不會啟動 IKEv2；實際服務請進入 IKEv2 管理頁面操作。</string>
     <string name="cancel">取消</string>
     <string name="start_read_check">開始唯讀檢查</string>
-    <string name="ikev2_preview">Apple 原生 VPN / IKEv2：開發中，目前鎖定。標準連接埠 UDP 500 / 4500；與 WireGuard 分開。WireGuard 新安裝預設連接埠為 51820，現有設定保留原連接埠。</string>
     <string name="connection_settings">連線設定</string>
     <string name="endpoint_label">網域名稱或公用 IPv6</string>
     <string name="endpoint_help">用戶端連線至此伺服器的位址，可填寫網域名稱或公用 IPv6，不加方括號。留空時使用已設定的 DDNS 網域名稱或目前公用 IPv6。</string>
@@ -79,7 +78,7 @@
     <string name="peer_section">Peer 裝置</string>
     <string name="add_peer">新增 Peer</string>
     <string name="seal_help">匯出後可 Seal：刪除本機可匯出的用戶端私密金鑰，但現有裝置仍可連線。</string>
-    <string name="footer">作者：TianzeL · AtticusVPN %1$s · 標準協定，不含流量偽裝或規避檢測功能</string>
+    <string name="footer">TianzeL · AtticusVPN %1$s</string>
     <string name="no_peers">尚未新增 Peer。</string>
     <string name="sealed">已 Seal</string>
     <string name="exportable">可匯出</string>
@@ -177,7 +176,7 @@
     <string name="ikev2_root_denied">Root 授權被拒絕；可重新要求，WireGuard 不受影響</string>
     <string name="ikev2_kernel_unsupported">裝置核心不支援所需的 IPsec 功能</string>
     <string name="ikev2_xfrm_unavailable">XFRM 唯讀檢查未通過；可能受權限、工具或核心限制</string>
-    <string name="ikev2_dataplane_unavailable">本開發版未整合可執行的 IKEv2 服務；IPsec 資料平面尚未驗證</string>
+    <string name="ikev2_dataplane_unavailable">已取得能力快照；實際 IKEv2 服務與用戶端資料平面請在 IKEv2 管理頁面啟動及驗證</string>
     <string name="ikev2_port_conflict">觀察到 UDP 500 / 4500 正在使用；未啟動 IKEv2</string>
     <string name="ikev2_error">Root 或裝置檢查異常；請手動重試</string>
     <string name="check_idle">尚未檢測；開啟資訊頁後自動檢測</string>
@@ -200,7 +199,6 @@
     <string name="ipv6_non_global">僅觀察到非全域 IPv6；尚未證明公網可達</string>
     <string name="ipv6_failed">IPv6 介面讀取失敗</string>
     <string name="root_provider_unknown">未知 Root 管理器</string>
-    <string name="app_name">AtticusVPN Server</string>
     <string name="server_channel">VPN 伺服器</string>
     <string name="server_channel_description">顯示 AtticusVPN Server 的執行與網路恢復狀態</string>
     <string name="server_running">AtticusVPN Server 正在執行</string>
@@ -245,5 +243,23 @@
     <string name="wg_conf_failed">設定檔儲存失敗或匯出被中斷，請重試。</string>
     <string name="wg_config_copied">WireGuard 設定已複製。設定包含用戶端私密金鑰，請注意剪貼簿安全。</string>
     <string name="wg_copy_failed">無法複製設定，請重試或儲存 .conf 設定檔。</string>
+
+
+    <string name="background_title">鎖屏與背景執行</string>
+    <string name="background_explanation">開啟後，已啟動的 VPN 服務會透過前景通知和 CPU 喚醒鎖維持背景執行。授權不會自動啟動任何協定。</string>
+    <string name="background_one_click">一鍵檢查並申請</string>
+    <string name="background_consent">將依序開啟通知權限和電池最佳化豁免的系統確認頁面，結果由你選擇。持續執行會增加耗電；廠商的自動啟動、不限制電池設定可能仍需手動開啟。</string>
+    <string name="background_continue">繼續申請</string>
+    <string name="background_notification_settings">通知設定</string>
+    <string name="background_app_settings">應用程式詳情與廠商背景設定</string>
+    <string name="background_oem_help">在系統應用程式詳情中，將電池設為「不限制」，依手機品牌開啟「自動啟動／允許背景執行」；必要時在最近任務中鎖定應用程式。系統沒有統一介面檢查這些廠商開關。鎖屏不應停止服務，但強制停止、重新開機、斷網、系統回收或 Root 權限遺失仍會中斷服務。本功能不自動重新申請 Root 或開機啟動。</string>
+    <string name="background_settings_unavailable">無法開啟此系統頁面，請在系統設定中搜尋電池最佳化或應用程式權限。</string>
+    <string name="background_status">通知：%1$s\n電池最佳化豁免：%2$s\n系統背景限制：%3$s</string>
+    <string name="background_allowed">已允許</string>
+    <string name="background_needs_setup">未允許，可手動設定</string>
+    <string name="background_restricted">存在限制，請在應用程式詳情中調整</string>
+    <string name="background_not_restricted">未偵測到系統限制</string>
+    <string name="background_finished">檢查完成，以上狀態以系統實際授權為準。仍未允許的項目可以稍後手動調整。</string>
     <string name="peer_revoked_service_stopped">已撤銷 Peer。執行中授權同步失敗，VPN 服務已停止；請檢查後手動啟動。</string>
+    <string name="ikev2_preview">Apple 原生 VPN / IKEv2：開發中，目前鎖定。標準連接埠 UDP 500 / 4500；與 WireGuard 分開。WireGuard 新安裝預設連接埠為 51820，現有設定保留原連接埠。</string>
 </resources>

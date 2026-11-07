@@ -52,12 +52,18 @@ public final class EncryptedStateRepository {
     }
 
     public synchronized void initialize() throws Exception {
-        if (stateBlob.exists()) {
-            state = decode(stateBlob.read());
+        if (state != null) return;
+        final byte[] stored = stateBlob.read();
+        final ServerState loaded;
+        if (stored != null) {
+            loaded = decode(stored);
         } else {
-            state = createFreshState();
-            persist();
+            loaded = createFreshState();
+            persist(loaded);
         }
+        // Publish only a successfully recovered or committed state. Failed first writes
+        // must not enable cleanup using an uncommitted, empty Peer list.
+        state = loaded;
         // Orphan cleanup is scheduled independently after initialization succeeds.
     }
 
@@ -204,7 +210,12 @@ public final class EncryptedStateRepository {
     }
 
     private void persist() throws Exception {
-        final byte[] plain = encode(state);
+        requireReady();
+        persist(state);
+    }
+
+    private void persist(final ServerState value) throws Exception {
+        final byte[] plain = encode(value);
         try {
             stateBlob.write(plain);
         } finally {

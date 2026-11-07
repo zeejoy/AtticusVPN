@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="vpn_settings">VPN 설정</string>
+    <string name="home_receive">수신  %1$s</string>
+    <string name="home_transmit">송신  %1$s</string>
+    <string name="home_recent_devices">최근 활성 기기</string>
+    <string name="home_running">서버 실행 중</string>
+    <string name="home_stopped">서버 중지됨</string>
+    <string name="home_starting">서버 시작 중…</string>
+    <string name="home_stopping">서버 중지 중…</string>
+    <string name="home_waiting">네트워크 대기 중</string>
+    <string name="home_failed">서버 확인 필요</string>
+    <string name="home_wg_stats_note">서버 트래픽 · 최근 핸드셰이크로 활동 추정</string>
+    <string name="home_protocol_information">%1$s · IP 정보</string>
+</resources>

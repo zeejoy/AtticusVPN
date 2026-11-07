@@ -95,12 +95,13 @@ public final class AtticusServerService extends Service implements AndroidNetwor
     }
 
     private void refreshNotificationLanguage() {
-        if (destroyed) return;
-        createNotificationChannel();
-        final RuntimeStatus status = RuntimeStatusStore.current();
-        if (status.phase() == RuntimeStatus.Phase.STOPPED) return;
-        final NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (manager != null) manager.notify(NOTIFICATION_ID, buildNotification(statusText(status)));
+        synchronized (commandLock) {
+            if (destroyed) return;
+            createNotificationChannel();
+            final RuntimeStatus status = RuntimeStatusStore.current();
+            if (status.phase() == RuntimeStatus.Phase.STOPPED) return;
+            showNotification(statusText(status), false);
+        }
     }
 
     @Override public void onConfigurationChanged(Configuration newConfig) {
@@ -124,6 +125,8 @@ public final class AtticusServerService extends Service implements AndroidNetwor
     private DdnsUpdateManager ddnsManager;
     private NativeEngine engine;
     private PowerManager.WakeLock wakeLock;
+    private long wakeRenewAt;
+    private String lastNotificationKey = "";
     private NetworkSnapshot lastSnapshot;
     private boolean desiredRunning;
     private boolean engineRunning;
@@ -216,7 +219,7 @@ public final class AtticusServerService extends Service implements AndroidNetwor
                     "AtticusVPN:ServerRuntime");
             wakeLock.setReferenceCounted(false);
         }
-        worker.scheduleWithFixedDelay(this::pollRuntimeStatus, 5L, 5L, TimeUnit.SECONDS);
+        worker.scheduleWithFixedDelay(this::pollRuntimeStatus, 1L, 1L, TimeUnit.SECONDS);
     }
 
     @Override
@@ -233,7 +236,7 @@ public final class AtticusServerService extends Service implements AndroidNetwor
                     ? commandGeneration
                     : ++commandGeneration;
             // 与旧 STOP 的最终检查使用同一把锁；新命令总能保留或恢复前台通知。
-            startForeground(NOTIFICATION_ID, buildNotification(localized(R.string.notification_preparing)));
+            showNotification(localized(R.string.notification_preparing), true);
         }
         if (ACTION_REVOKE.equals(action)) {
             final String id = intent.getStringExtra(EXTRA_PEER);
@@ -402,7 +405,10 @@ public final class AtticusServerService extends Service implements AndroidNetwor
         monitorStarted = false;
         releaseWakeLock();
         publish(RuntimeStatus.stopped());
-        stopForeground(STOP_FOREGROUND_REMOVE);
+        synchronized (commandLock) {
+            stopForeground(STOP_FOREGROUND_REMOVE);
+            lastNotificationKey = "";
+        }
         stopSelf();
     }
 
@@ -474,6 +480,7 @@ public final class AtticusServerService extends Service implements AndroidNetwor
                     .orElseThrow(() -> new NativeEngineException("ANDROID_NETWORK_OBJECT_UNAVAILABLE"));
             bindListenerSockets(androidNetwork, engine);
             engineRunning = true;
+            dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().engineStarted(dev.lan.atticusvpn.server.logging.RunLogModel.Protocol.WG);
             activeSignature = signature;
             activeUpstreams = upstreams;
             publish(new RuntimeStatus(RuntimeStatus.Phase.RUNNING, "", endpoint, peers));
@@ -575,6 +582,7 @@ public final class AtticusServerService extends Service implements AndroidNetwor
             }
             publish(RuntimeStatus.stopped());
             stopForeground(STOP_FOREGROUND_REMOVE);
+            lastNotificationKey = "";
             stopSelfResult(startId);
         }
     }
@@ -606,6 +614,10 @@ public final class AtticusServerService extends Service implements AndroidNetwor
 
     private void stopEngineSafely() {
         cancelNetworkCheck();
+        if(engineRunning && engine!=null)try {
+            dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().nativeSnapshot(
+                    dev.lan.atticusvpn.server.logging.RunLogModel.Protocol.WG,engine.status(),repository());
+        }catch(Exception ignored){dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().event("WG","TELEMETRY_READ_FAILED");}
         if (engine != null) {
             try {
                 engine.stop();
@@ -740,11 +752,7 @@ public final class AtticusServerService extends Service implements AndroidNetwor
                 configuredEndpoint, configuredDnsEnabled, configuredDdnsProvider)
                 .withNetworkCheck(networkCheck);
         RuntimeStatusStore.publish(enriched);
-        final NotificationManager manager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (manager != null) {
-            manager.notify(NOTIFICATION_ID, buildNotification(statusText(enriched)));
-        }
+        showNotification(statusText(enriched), false);
     }
 
     /** 每五秒读取 native 的脱敏 JSON，并在内存中把公钥映射为 Peer 名称。 */
@@ -761,9 +769,12 @@ public final class AtticusServerService extends Service implements AndroidNetwor
         }
         try {
             final String json = engine.status();
-            if (json == null || json.length() > 64 * 1024) {
+            if (json == null || json.length() > dev.lan.atticusvpn.server.logging.RuntimeLogCollector.MAX_NATIVE_JSON) {
+                dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().event("WG","TELEMETRY_READ_FAILED");
                 return;
             }
+            dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().nativeSnapshot(
+                    dev.lan.atticusvpn.server.logging.RunLogModel.Protocol.WG,json,repository());
             final List<RuntimeStatus.PeerRuntime> peerStats = parsePeerStats(json);
             final RuntimeStatus current = RuntimeStatusStore.current();
             publish(new RuntimeStatus(
@@ -779,7 +790,7 @@ public final class AtticusServerService extends Service implements AndroidNetwor
                     configuredDnsEnabled,
                     configuredDdnsProvider));
         } catch (final Exception ignored) {
-            // 统计失败不应中断仍工作的数据面，也不显示可能变化的 native 异常文本。
+            dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().event("WG","TELEMETRY_READ_FAILED");
         }
     }
 
@@ -812,6 +823,26 @@ public final class AtticusServerService extends Service implements AndroidNetwor
                     item.optLong("transmitBytes", 0L)));
         }
         return result;
+    }
+
+    /** One serialized entry point for every notification write and its dedup key. */
+    private void showNotification(final String text, final boolean foreground) {
+        synchronized (commandLock) {
+            if (destroyed) return;
+            final Notification notification = buildNotification(text);
+            final String key = notification.extras.getCharSequence(Notification.EXTRA_TITLE)
+                    + "\n" + notification.extras.getCharSequence(Notification.EXTRA_TEXT)
+                    + "\n" + notification.actions[0].title;
+            if (foreground) {
+                startForeground(NOTIFICATION_ID, notification);
+            } else {
+                final NotificationManager manager =
+                        (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                if (manager == null || key.equals(lastNotificationKey)) return;
+                manager.notify(NOTIFICATION_ID, notification);
+            }
+            lastNotificationKey = key;
+        }
     }
 
     private Notification buildNotification(final String text) {
@@ -874,8 +905,9 @@ public final class AtticusServerService extends Service implements AndroidNetwor
     }
 
     private void acquireWakeLock() {
-        if (wakeLock != null && !wakeLock.isHeld()) {
+        if (wakeLock != null && (!wakeLock.isHeld() || android.os.SystemClock.elapsedRealtime() >= wakeRenewAt)) {
             wakeLock.acquire(WAKE_LOCK_TIMEOUT_MILLIS);
+            wakeRenewAt=android.os.SystemClock.elapsedRealtime()+WAKE_LOCK_TIMEOUT_MILLIS/2;
         }
     }
 

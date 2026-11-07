@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">今回のセッションログ</string>
+    <string name="runtime_log_intro">このアプリのプロセスを記録します。バックグラウンド サービスは記録を続けます。新しいプロセスは新しいログを開始します。ページは毎秒更新されます。切断されたデバイス、監視された IP、時間、および最終トラフィックはこのセッションに残ります。ストレージには制限があります。古いエントリは、目に見えるカウントとともに削除される場合があります。  WireGuard には継続的な接続状態がありません。その期間は観察ウィンドウであり、最新のハンドシェイクは最初の接続時間ではありません。</string>
+    <string name="runtime_log_privacy">デバイスの IP はデフォルトでマスクされます。秘密キー、パスワード、トークン、および完全な構成は除外されます。コピーと保存では、現在表示されているのと同じスナップショットが使用されます。完全な IP はプライベートです。公に共有しないでください。外部ファイルプロバイダーは、エクスポートされたファイルをバックアップする場合があります。このページではスクリーンショットはブロックされています。</string>
+    <string name="runtime_log_show_full_ips">完全なデバイス IP を表示する (このページのみ)</string>
+    <string name="runtime_log_masked">デバイスの IP はマスクされます。コピーと保存でもマスクされたバージョンが使用されます。</string>
+    <string name="runtime_log_full_ip_warning">表示、コピー、保存に完全なデバイス IP が含まれるようになりました。慎重に共有してください。</string>
+    <string name="runtime_log_copy">現在のログをコピー</string>
+    <string name="runtime_log_save">現在のログを TXT で保存</string>
+    <string name="runtime_log_copied">現在のログのスナップショットがコピーされました。</string>
+    <string name="runtime_log_copy_failed">コピーできませんでした。再試行するか、ファイルに保存します。</string>
+    <string name="runtime_log_saved">「保存」をタップしたときにキャプチャされたログのスナップショットを保存しました。</string>
+    <string name="runtime_log_save_failed">ログを保存できませんでした。ファイルプロバイダーが利用できないか、権限がないか、エクスポート制限を超えている可能性があります。場所を選択して再試行してください。</string>
+    <string name="runtime_log_export_expired">保留中のスナップショットの有効期限が切れたか、ページが再作成されました。もう一度「保存」をタップします。録音は続けられます。</string>
+    <string name="runtime_log_waiting">このセッションの実行時レコードを待っています…</string>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="vpn_settings">VPN सेटिंग</string>
+    <string name="home_receive">प्राप्त  %1$s</string>
+    <string name="home_transmit">भेजा  %1$s</string>
+    <string name="home_recent_devices">हाल में सक्रिय डिवाइस</string>
+    <string name="home_running">सर्वर चल रहा है</string>
+    <string name="home_stopped">सर्वर बंद है</string>
+    <string name="home_starting">सर्वर शुरू हो रहा है…</string>
+    <string name="home_stopping">सर्वर रोका जा रहा है…</string>
+    <string name="home_waiting">नेटवर्क की प्रतीक्षा</string>
+    <string name="home_failed">सर्वर पर ध्यान दें</string>
+    <string name="home_wg_stats_note">सर्वर ट्रैफ़िक · हाल के हैंडशेक से अनुमानित सक्रियता</string>
+    <string name="home_protocol_information">%1$s · IP जानकारी</string>
+</resources>

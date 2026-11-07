@@ -7,9 +7,13 @@ package atticusengine
 
 import (
 	"bufio"
+	"context"
+	"dev.lan.atticusvpn/server/native-engine/internal/telemetry"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
+	"net/netip"
 	"regexp"
 	"strconv"
 	"strings"
@@ -21,7 +25,7 @@ import (
 )
 
 const (
-	engineVersion = "0.2.0"
+	engineVersion = "0.6.0-stable"
 	maxUAPIBytes  = 64 * 1024
 )
 
@@ -32,15 +36,17 @@ var (
 )
 
 type engineInstance struct {
-	gateway *userGateway
-	tun     *channelTUN
-	device  *device.Device
-	started time.Time
-	port    int
-	bind    conn.Bind
+	failures *telemetry.Book
+	gateway  *userGateway
+	tun      *channelTUN
+	device   *device.Device
+	started  time.Time
+	port     int
+	bind     conn.Bind
 }
 
 type peerStatus struct {
+	Endpoint            string `json:"endpoint"`
 	PublicKey           string `json:"publicKey"`
 	LatestHandshakeUnix int64  `json:"latestHandshakeUnix"`
 	ReceiveBytes        uint64 `json:"receiveBytes"`
@@ -48,17 +54,19 @@ type peerStatus struct {
 }
 
 type engineStatus struct {
-	Running        bool         `json:"running"`
-	Version        string       `json:"version"`
-	ListenPort     int          `json:"listenPort"`
-	StartedUnix    int64        `json:"startedUnix"`
-	TCPConnections uint64       `json:"tcpConnections"`
-	UDPSessions    uint64       `json:"udpSessions"`
-	DNSQueries     uint64       `json:"dnsQueries"`
-	DNSCacheHits   uint64       `json:"dnsCacheHits"`
-	ToInternet     uint64       `json:"toInternetBytes"`
-	ToPeer         uint64       `json:"toPeerBytes"`
-	Peers          []peerStatus `json:"peers"`
+	PeerStatsAvailable bool              `json:"peerStatsAvailable"`
+	Errors             []telemetry.Error `json:"errors"`
+	Running            bool              `json:"running"`
+	Version            string            `json:"version"`
+	ListenPort         int               `json:"listenPort"`
+	StartedUnix        int64             `json:"startedUnix"`
+	TCPConnections     uint64            `json:"tcpConnections"`
+	UDPSessions        uint64            `json:"udpSessions"`
+	DNSQueries         uint64            `json:"dnsQueries"`
+	DNSCacheHits       uint64            `json:"dnsCacheHits"`
+	ToInternet         uint64            `json:"toInternetBytes"`
+	ToPeer             uint64            `json:"toPeerBytes"`
+	Peers              []peerStatus      `json:"peers"`
 }
 
 // Version 返回本地数据面版本，不访问网络，也不包含设备或密钥信息。
@@ -81,6 +89,12 @@ func SetNetworkHandle(handle int64) {
 // 配置。函数在进入 wireguard-go 前执行字段白名单和 key 形状检查，并且从不记录
 // 原文；这样错误路径也不会把 private_key/preshared_key 泄漏到 Logcat。
 func Start(uapi string, upstreamCSV string, mtu int) error {
+	return startWithDial(uapi, upstreamCSV, mtu, nil)
+}
+
+// Internal dependency injection lets bounded tests exercise actual forwarding
+// failures. Android's public API always uses the normal network-bound dialer.
+func startWithDial(uapi string, upstreamCSV string, mtu int, dial func(context.Context, time.Duration, string, string) (net.Conn, error)) error {
 	engineMu.Lock()
 	defer engineMu.Unlock()
 	if current != nil {
@@ -97,15 +111,25 @@ func Start(uapi string, upstreamCSV string, mtu int) error {
 	if err != nil {
 		return errors.New("GATEWAY_START_FAILED")
 	}
+	gateway.dialContext = dial // assigned before publishing/starting the WireGuard device
 	tunDevice := newChannelTUN("atticusserver", mtu, gateway.link)
 	// 禁用 verbose logger，避免把流量元数据送入系统日志；固定安全错误码由 Java 层显示。
+	failures := gateway.failures
 	logger := &device.Logger{
 		Verbosef: func(string, ...any) {},
-		Errorf:   func(string, ...any) {},
+		Errorf:   func(format string, _ ...any) { failures.Record(wgErrorCode(format)) },
 	}
 	networkBind := conn.NewStdNetBind()
 	wgDevice := device.NewDevice(tunDevice, networkBind, logger)
 	if err := wgDevice.IpcSet(uapi); err != nil {
+		wgDevice.Close()
+		gateway.close()
+		return errors.New("WIREGUARD_CONFIG_REJECTED")
+	}
+	// Bind quotas to the effective authenticated AllowedIPs routing table before
+	// any peer traffic can enter the gateway. No private UAPI fields are retained.
+	snapshot, readErr := wgDevice.IpcGet()
+	if readErr != nil || gateway.configureTCPPeers(snapshot) != nil {
 		wgDevice.Close()
 		gateway.close()
 		return errors.New("WIREGUARD_CONFIG_REJECTED")
@@ -116,12 +140,13 @@ func Start(uapi string, upstreamCSV string, mtu int) error {
 		return errors.New("WIREGUARD_LISTENER_FAILED")
 	}
 	current = &engineInstance{
-		gateway: gateway,
-		tun:     tunDevice,
-		device:  wgDevice,
-		started: time.Now(),
-		port:    port,
-		bind:    networkBind,
+		failures: failures,
+		gateway:  gateway,
+		tun:      tunDevice,
+		device:   wgDevice,
+		started:  time.Now(),
+		port:     port,
+		bind:     networkBind,
 	}
 	return nil
 }
@@ -192,9 +217,9 @@ func Status() string {
 	status.DNSCacheHits = current.gateway.stats.dnsCacheHits.Load()
 	status.ToInternet = current.gateway.stats.toInternet.Load()
 	status.ToPeer = current.gateway.stats.toPeer.Load()
-	if uapi, err := current.device.IpcGet(); err == nil {
-		status.Peers = parsePeerStatus(uapi)
-	}
+	status.Peers, status.PeerStatsAvailable = readPeerSnapshot(current.device.IpcGet, current.failures)
+	status.Errors = current.failures.Snapshot()
+
 	raw, _ := json.Marshal(status)
 	return string(raw)
 }
@@ -259,14 +284,50 @@ func validateServerUAPI(raw string) (int, error) {
 }
 
 func parsePeerStatus(raw string) []peerStatus {
+	peers, _ := parsePeerStatusChecked(raw)
+	return peers
+}
+
+// A failed or partial counter read is unknown, never evidence of an empty peer
+// set. The separate availability bit prevents consumers from inventing device
+// disconnects when IpcGet or a recognized runtime field cannot be parsed.
+func readPeerSnapshot(read func() (string, error), failures *telemetry.Book) ([]peerStatus, bool) {
+	raw, err := read()
+	if err == nil {
+		if peers, complete := parsePeerStatusChecked(raw); complete {
+			return peers, true
+		}
+	}
+	failures.Record("WG_STATUS_FAILED")
+	return []peerStatus{}, false
+}
+
+func parsePeerStatusChecked(raw string) ([]peerStatus, bool) {
 	peers := make([]peerStatus, 0)
 	var active *peerStatus
+	complete := true
+	seen := uint8(0)
+	keys := make(map[string]bool)
 	for _, line := range strings.Split(raw, "\n") {
-		key, value, ok := strings.Cut(line, "=")
-		if !ok {
+		if line == "" {
 			continue
 		}
-		if key == "public_key" && hexKey.MatchString(value) {
+		key, value, ok := strings.Cut(line, "=")
+		if !ok {
+			complete = false
+			continue
+		}
+		if key == "public_key" {
+			if active != nil && seen != 7 {
+				complete = false
+			}
+			active = nil
+			seen = 0
+			if !hexKey.MatchString(value) || keys[value] {
+				complete = false
+				continue
+			}
+			keys[value] = true
 			peers = append(peers, peerStatus{PublicKey: value})
 			active = &peers[len(peers)-1]
 			continue
@@ -275,15 +336,38 @@ func parsePeerStatus(raw string) []peerStatus {
 			continue
 		}
 		switch key {
+		case "endpoint":
+			active.Endpoint = normalizeEndpoint(value)
+			if active.Endpoint == "" {
+				complete = false
+			}
 		case "last_handshake_time_sec":
-			active.LatestHandshakeUnix, _ = strconv.ParseInt(value, 10, 64)
+			var err error
+			active.LatestHandshakeUnix, err = strconv.ParseInt(value, 10, 64)
+			if err != nil || active.LatestHandshakeUnix < 0 || seen&1 != 0 {
+				complete = false
+			}
+			seen |= 1
 		case "rx_bytes":
-			active.ReceiveBytes, _ = strconv.ParseUint(value, 10, 64)
+			var err error
+			active.ReceiveBytes, err = strconv.ParseUint(value, 10, 64)
+			if err != nil || seen&2 != 0 {
+				complete = false
+			}
+			seen |= 2
 		case "tx_bytes":
-			active.TransmitBytes, _ = strconv.ParseUint(value, 10, 64)
+			var err error
+			active.TransmitBytes, err = strconv.ParseUint(value, 10, 64)
+			if err != nil || seen&4 != 0 {
+				complete = false
+			}
+			seen |= 4
 		}
 	}
-	return peers
+	if active != nil && seen != 7 {
+		complete = false
+	}
+	return peers, complete
 }
 
 // SelfTest 供构建/诊断页执行不联网的 native 烟雾测试。
@@ -299,4 +383,46 @@ func SelfTest() error {
 		return errors.New("SELF_TEST_DNS_FAILED")
 	}
 	return nil
+}
+
+func wgErrorCode(format string) string {
+	switch {
+	case strings.Contains(format, "Unable to update bind"):
+		return "WG_BIND_UPDATE_FAILED"
+	case strings.Contains(format, "Bind close failed"):
+		return "WG_BIND_CLOSE_FAILED"
+	case strings.Contains(format, "Failed to send data packets"):
+		return "WG_DATA_SEND_FAILED"
+	case strings.Contains(format, "TUN device"):
+		return "WG_TUN_IO_FAILED"
+	case strings.Contains(format, "MTU"):
+		return "WG_MTU_FAILED"
+	case strings.Contains(format, "handshake"), strings.Contains(format, "derive keypair"), strings.Contains(format, "create initiation"), strings.Contains(format, "create response"), strings.Contains(format, "cookie reply"):
+		return "WG_HANDSHAKE_FAILED"
+	case strings.Contains(format, "Invalid packet"), strings.Contains(format, "Failed to decode"):
+		return "WG_INVALID_PACKET"
+	default:
+		return "NATIVE_RUNTIME_ERROR"
+	}
+}
+
+// Same numeric endpoint policy as test 1.3.0; never resolve names or emit secrets.
+func normalizeEndpoint(raw string) string {
+	if len(raw) == 0 || len(raw) > 128 {
+		return ""
+	}
+	a, err := netip.ParseAddrPort(raw)
+	if err != nil || !a.IsValid() || a.Port() == 0 || a.Addr().IsUnspecified() {
+		return ""
+	}
+	zone := a.Addr().Zone()
+	if len(zone) > 32 {
+		return ""
+	}
+	for _, r := range zone {
+		if !(r >= 'a' && r <= 'z' || r >= 'A' && r <= 'Z' || r >= '0' && r <= '9' || r == '_' || r == '-' || r == '.') {
+			return ""
+		}
+	}
+	return a.String()
 }

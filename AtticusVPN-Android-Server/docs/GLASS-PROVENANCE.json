@@ -1,0 +1,32 @@
+[
+  {
+    "path": "app/src/main/java/dev/lan/atticusvpn/server/ui/HomePageNavigation.java",
+    "test_1_3_0_sha256": "84d1ecc521278a3e805fcab5a15dae5ecf4a9c14aa419f9ce82297f86a367ee5",
+    "byte_identical": true
+  },
+  {
+    "path": "app/src/main/java/dev/lan/atticusvpn/server/ui/HomePagesView.java",
+    "test_1_3_0_sha256": "f4edbd88cff2fd8ff0b26989c5e4d82c7489c25c0d98c2902d74651c6e91c9f7",
+    "byte_identical": true
+  },
+  {
+    "path": "app/src/main/java/dev/lan/atticusvpn/server/ui/PageMotion.java",
+    "test_1_3_0_sha256": "c14ade7db3b68e30d40c3f89cac30dc29798aaa3e00f4fcec38d91d104ff050a",
+    "byte_identical": true
+  },
+  {
+    "path": "app/src/main/java/dev/lan/atticusvpn/server/ui/GlassPixels.java",
+    "test_1_3_0_sha256": "bf45a398c8cfa584d5d49c9a60c1cca1c1126e9c74bb123cfb942e18b7e20c55",
+    "byte_identical": true
+  },
+  {
+    "path": "app/src/main/java/dev/lan/atticusvpn/server/ui/GlassOptics.java",
+    "test_1_3_0_sha256": "94abd2533e33ca29c67f54a80c6ff52a4a274e4b020a651e7bc9a3f7d5b9a21b",
+    "byte_identical": true
+  },
+  {
+    "path": "app/src/main/java/dev/lan/atticusvpn/server/ui/HomeWindowInsets.java",
+    "test_1_3_0_sha256": "3c1fafbfd61eaa6fda79e2d4ab9d1c8ce7514c906d4a4891ecb96951fe2a29ca",
+    "byte_identical": true
+  }
+]

@@ -5,6 +5,7 @@ package atticusengine
 
 import (
 	"context"
+	"dev.lan.atticusvpn/server/native-engine/internal/telemetry"
 	"encoding/binary"
 	"errors"
 	"fmt"
@@ -58,16 +59,21 @@ type gatewayStats struct {
 // socket relay。因此不依赖 iptables/nftables，也不需要 Root。互联网看到的源地址
 // 是 Android 当前网络 socket 的地址，而不是 10.77.0.x，这等价于用户态 NAT44。
 type userGateway struct {
-	stack      *stack.Stack
-	link       *channel.Endpoint
-	cache      *dnsCache
-	upstreams  []string
-	dnsEnabled bool
-	udpSlots   chan struct{}
-	ctx        context.Context
-	cancel     context.CancelFunc
-	wg         sync.WaitGroup
-	stats      gatewayStats
+	stack       *stack.Stack
+	link        *channel.Endpoint
+	cache       *dnsCache
+	upstreams   []string
+	dnsEnabled  bool
+	udpSlots    chan struct{}
+	tcp         tcpFlowBook
+	udpMu       sync.Mutex
+	udpClosed   bool
+	failures    *telemetry.Book
+	dialContext func(context.Context, time.Duration, string, string) (net.Conn, error)
+	ctx         context.Context
+	cancel      context.CancelFunc
+	wg          sync.WaitGroup
+	stats       gatewayStats
 }
 
 var selectedNetwork atomic.Uint64
@@ -131,6 +137,7 @@ func newUserGateway(mtu int, upstreamCSV string) (*userGateway, error) {
 	}
 	g := &userGateway{
 		stack:      s,
+		failures:   &telemetry.Book{},
 		link:       link,
 		cache:      newDNSCache(256),
 		upstreams:  upstreams,
@@ -249,43 +256,50 @@ func (g *userGateway) handleTCP(request *tcp.ForwarderRequest) {
 		request.Complete(true)
 		return
 	}
+	source, _ := netip.AddrFromSlice(id.RemoteAddress.AsSlice())
+	flow := g.openTCPFlow(source)
+	if flow == nil {
+		if g.ctx.Err() == nil {
+			g.record("GATEWAY_TCP_LIMIT")
+		}
+		request.Complete(true)
+		return
+	}
 	var outbound net.Conn
 	if !isDNS {
 		var err error
-		outbound, err = newBoundDialer(tcpDialTimeout).DialContext(g.ctx, "tcp", destination(id))
+		outbound, err = g.dial(flow.ctx, tcpDialTimeout, "tcp", destination(id))
 		if err != nil {
+			g.recordDial(flow.ctx, "TCP", err)
 			request.Complete(true)
+			g.releaseTCPFlow(flow)
 			return
 		}
+		flow.attach(outbound)
 	}
 	var queue waiter.Queue
 	endpoint, tcpErr := request.CreateEndpoint(&queue)
 	if tcpErr != nil {
-		request.Complete(true)
-		if outbound != nil {
-			_ = outbound.Close()
+		if flow.ctx.Err() == nil {
+			g.record("GATEWAY_ENDPOINT_FAILED")
 		}
+		request.Complete(true)
+		g.releaseTCPFlow(flow)
 		return
 	}
 	request.Complete(false)
 	inbound := gonet.NewTCPConn(&queue, endpoint)
+	flow.attach(inbound)
 	g.stats.tcpConnections.Add(1)
-	g.wg.Add(1)
 	go func() {
-		defer g.wg.Done()
-		defer inbound.Close()
+		defer g.releaseTCPFlow(flow)
 		if isDNS {
+			stop := context.AfterFunc(flow.ctx, func() { _ = inbound.Close() })
+			defer stop()
 			g.serveDNSTCP(inbound)
 			return
 		}
-		defer outbound.Close()
-		done := make(chan struct{}, 2)
-		go g.copyAndCount(outbound, inbound, &g.stats.toInternet, done)
-		go g.copyAndCount(inbound, outbound, &g.stats.toPeer, done)
-		select {
-		case <-g.ctx.Done():
-		case <-done:
-		}
+		g.relayTCP(flow.ctx, inbound, outbound, tcpIdleTimeout, tcpHalfCloseTimeout)
 	}()
 }
 
@@ -296,27 +310,32 @@ func (g *userGateway) handleUDP(request *udp.ForwarderRequest) {
 		return
 	}
 	if !g.acquireUDPSession() {
+		if g.ctx.Err() == nil {
+			g.record("GATEWAY_UDP_LIMIT")
+		}
 		return
 	}
 	var queue waiter.Queue
 	endpoint, udpErr := request.CreateEndpoint(&queue)
 	if udpErr != nil {
+		if g.ctx.Err() == nil {
+			g.record("GATEWAY_ENDPOINT_FAILED")
+		}
 		g.releaseUDPSession()
 		return
 	}
 	inbound := gonet.NewUDPConn(&queue, endpoint)
 	g.stats.udpSessions.Add(1)
-	g.wg.Add(1)
 	go func() {
-		defer g.wg.Done()
 		defer g.releaseUDPSession()
 		defer inbound.Close()
 		if isDNS {
 			g.serveDNS(inbound)
 			return
 		}
-		outbound, err := newBoundDialer(tcpDialTimeout).DialContext(g.ctx, "udp", destination(id))
+		outbound, err := g.dial(g.ctx, tcpDialTimeout, "udp", destination(id))
 		if err != nil {
+			g.recordDial(g.ctx, "UDP", err)
 			return
 		}
 		defer outbound.Close()
@@ -326,19 +345,34 @@ func (g *userGateway) handleUDP(request *udp.ForwarderRequest) {
 			_ = outbound.SetDeadline(deadline)
 		}
 		refreshDeadline()
-		done := make(chan struct{}, 2)
+		done := make(chan error, 2)
 		go g.copyDatagrams(outbound, inbound, &g.stats.toInternet, refreshDeadline, done)
 		go g.copyDatagrams(inbound, outbound, &g.stats.toPeer, refreshDeadline, done)
 		select {
 		case <-g.ctx.Done():
-		case <-done:
+		case err = <-done:
+			g.recordIO(err)
+			_ = inbound.Close()
+			_ = outbound.Close()
+			<-done
+			return
 		}
+		_ = inbound.Close()
+		_ = outbound.Close()
+		<-done
+		<-done
 	}()
 }
 
 func (g *userGateway) acquireUDPSession() bool {
+	g.udpMu.Lock()
+	defer g.udpMu.Unlock()
+	if g.udpClosed || (g.ctx != nil && g.ctx.Err() != nil) {
+		return false
+	}
 	select {
 	case g.udpSlots <- struct{}{}:
+		g.wg.Add(1)
 		return true
 	default:
 		return false
@@ -347,6 +381,7 @@ func (g *userGateway) acquireUDPSession() bool {
 
 func (g *userGateway) releaseUDPSession() {
 	<-g.udpSlots
+	g.wg.Done()
 }
 
 // copyDatagrams 每次 Read 对应一次 Write，使用 65535 字节缓冲区保持 UDP 报文边界。
@@ -356,12 +391,14 @@ func (g *userGateway) copyDatagrams(
 	src net.Conn,
 	counter *atomic.Uint64,
 	refreshDeadline func(),
-	done chan<- struct{},
+	done chan<- error,
 ) {
 	buf := make([]byte, 65535)
+	var result error
 	for {
 		n, err := src.Read(buf)
 		if err != nil {
+			result = err
 			break
 		}
 		// 任一方向有活动都会延长会话两端的 deadline；单向长流不会在固定两分钟被截断。
@@ -371,19 +408,15 @@ func (g *userGateway) copyDatagrams(
 			counter.Add(uint64(written))
 		}
 		if err != nil || written != n {
+			result = err
+			if err == nil {
+				result = io.ErrShortWrite
+			}
 			break
 		}
 		refreshDeadline()
 	}
-	done <- struct{}{}
-}
-
-func (g *userGateway) copyAndCount(dst io.Writer, src io.Reader, counter *atomic.Uint64, done chan<- struct{}) {
-	n, _ := io.Copy(dst, src)
-	if n > 0 {
-		counter.Add(uint64(n))
-	}
-	done <- struct{}{}
+	done <- result
 }
 
 // serveDNS 在 10.77.0.1:53 上逐个处理请求。Automatic upstream 由 Java 层从
@@ -437,6 +470,9 @@ func (g *userGateway) resolveDNS(query []byte, preferTCP bool) ([]byte, error) {
 	}
 	response, err := g.queryUpstream(query, preferTCP)
 	if err != nil {
+		if g.ctx.Err() == nil {
+			g.record("GATEWAY_DNS_FAILED")
+		}
 		return nil, err
 	}
 	g.cache.put(query, response)
@@ -475,11 +511,13 @@ func (g *userGateway) queryUpstream(query []byte, preferTCP bool) ([]byte, error
 }
 
 func (g *userGateway) queryDNSUDP(address string, query []byte) ([]byte, error) {
-	conn, err := newBoundDialer(5*time.Second).DialContext(g.ctx, "udp", address)
+	conn, err := g.dial(g.ctx, 5*time.Second, "udp", address)
 	if err != nil {
 		return nil, err
 	}
 	defer conn.Close()
+	stop := context.AfterFunc(g.ctx, func() { _ = conn.Close() })
+	defer stop()
 	_ = conn.SetDeadline(time.Now().Add(5 * time.Second))
 	written, err := conn.Write(query)
 	if err != nil || written != len(query) {
@@ -498,11 +536,13 @@ func (g *userGateway) queryDNSUDP(address string, query []byte) ([]byte, error) 
 }
 
 func (g *userGateway) queryDNSTCP(address string, query []byte) ([]byte, error) {
-	conn, err := newBoundDialer(5*time.Second).DialContext(g.ctx, "tcp", address)
+	conn, err := g.dial(g.ctx, 5*time.Second, "tcp", address)
 	if err != nil {
 		return nil, err
 	}
 	defer conn.Close()
+	stop := context.AfterFunc(g.ctx, func() { _ = conn.Close() })
+	defer stop()
 	_ = conn.SetDeadline(time.Now().Add(5 * time.Second))
 	if err := writeDNSFrame(conn, query); err != nil {
 		return nil, err
@@ -553,21 +593,21 @@ func readDNSFrame(reader io.Reader) ([]byte, error) {
 	return message, nil
 }
 
-func validDNSResponse(query, response []byte) bool {
-	return len(query) >= 2 && len(response) >= 12 && response[2]&0x80 != 0 &&
-		binary.BigEndian.Uint16(query[:2]) == binary.BigEndian.Uint16(response[:2])
-}
-
 func dnsResponseTruncated(response []byte) bool {
 	return len(response) >= 3 && response[2]&0x02 != 0
 }
 
 func (g *userGateway) close() {
 	g.cancel()
+	g.closeTCPFlows()
+	g.udpMu.Lock()
+	g.udpClosed = true
+	g.udpMu.Unlock()
 	g.stack.Close()
 	g.link.Close()
 	done := make(chan struct{})
 	go func() {
+		g.tcp.wg.Wait()
 		g.wg.Wait()
 		close(done)
 	}()

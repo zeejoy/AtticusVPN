@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">Registro de la sesión actual</string>
+    <string name="runtime_log_intro">Registra el proceso de esta aplicación. Los servicios en segundo plano siguen grabando; un nuevo proceso inicia un nuevo registro. La página se actualiza cada segundo. En esta sesión permanecen los dispositivos desconectados, las IP observadas, los tiempos y el tráfico final. El almacenamiento está limitado; Las entradas más antiguas pueden eliminarse con un recuento visible.  WireGuard no tiene un estado de conexión continua: su duración es una ventana de observación y el último protocolo de enlace no es la primera vez que se conecta.</string>
+    <string name="runtime_log_privacy">Las IP de los dispositivos están enmascaradas de forma predeterminada. Se excluyen claves privadas, contraseñas, Tokens y configuraciones completas. Copiar y Guardar utilizan la misma instantánea que se muestra actualmente. Las IP completas son privadas: no las comparta públicamente. Los proveedores de archivos externos pueden realizar copias de seguridad de los archivos exportados. Las capturas de pantalla están bloqueadas en esta página.</string>
+    <string name="runtime_log_show_full_ips">Mostrar las IP completas del dispositivo (solo esta página)</string>
+    <string name="runtime_log_masked">Las IP de los dispositivos están enmascaradas; Copiar y Guardar también usa la versión enmascarada.</string>
+    <string name="runtime_log_full_ip_warning">Mostrar, Copiar y Guardar ahora incluyen las direcciones IP completas del dispositivo. Comparte con cuidado.</string>
+    <string name="runtime_log_copy">Copiar registro actual</string>
+    <string name="runtime_log_save">Guardar registro actual como TXT</string>
+    <string name="runtime_log_copied">Se copió la instantánea del registro actual.</string>
+    <string name="runtime_log_copy_failed">No se pudo copiar. Vuelva a intentarlo o guárdelo en un archivo.</string>
+    <string name="runtime_log_saved">Se guardó la instantánea del registro capturada cuando se presionó Guardar.</string>
+    <string name="runtime_log_save_failed">No se pudo guardar el registro. Es posible que el proveedor de archivos no esté disponible, que falte permiso o que se haya excedido el límite de exportación. Elija una ubicación y vuelva a intentarlo.</string>
+    <string name="runtime_log_export_expired">La instantánea pendiente expiró o se volvió a crear la página. Toque Guardar nuevamente; la grabación continúa.</string>
+    <string name="runtime_log_waiting">Esperando los registros de tiempo de ejecución de esta sesión…</string>
+</resources>

@@ -3,4 +3,15 @@
     <locale android:name="zh-CN" />
     <locale android:name="zh-TW" />
     <locale android:name="en" />
+    <locale android:name="es" />
+    <locale android:name="fr" />
+    <locale android:name="de" />
+    <locale android:name="pt-BR" />
+    <locale android:name="ru" />
+    <locale android:name="ar" />
+    <locale android:name="hi" />
+    <locale android:name="ja" />
+    <locale android:name="ko" />
+    <!-- Android resource/system alias; persisted app language remains BCP 47 id. -->
+    <locale android:name="in" />
 </locale-config>

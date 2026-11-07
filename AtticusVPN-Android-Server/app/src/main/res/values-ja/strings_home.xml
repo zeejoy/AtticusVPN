@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="vpn_settings">VPN 設定</string>
+    <string name="home_receive">受信  %1$s</string>
+    <string name="home_transmit">送信  %1$s</string>
+    <string name="home_recent_devices">最近アクティブなデバイス</string>
+    <string name="home_running">サーバー稼働中</string>
+    <string name="home_stopped">サーバー停止中</string>
+    <string name="home_starting">サーバーを起動中…</string>
+    <string name="home_stopping">サーバーを停止中…</string>
+    <string name="home_waiting">ネットワーク待機中</string>
+    <string name="home_failed">サーバーの確認が必要です</string>
+    <string name="home_wg_stats_note">サーバー通信量・最近のハンドシェイクから推定</string>
+    <string name="home_protocol_information">%1$s・IP 情報</string>
+</resources>

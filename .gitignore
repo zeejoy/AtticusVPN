@@ -73,3 +73,25 @@ backups/
 
 # Java compiled output
 **/bin/
+
+# STABLE 0.6.0 source protection (also present in the standalone module).
+*.conf
+*.atticus.json
+*signing*.properties
+keystore.properties
+*.enc.new
+*.enc.bak
+*.sqlite
+secrets/
+credentials/
+secrets.json
+credentials.json
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+*.crt
+*.cer
+*.csr
+*.der
+*.p7b

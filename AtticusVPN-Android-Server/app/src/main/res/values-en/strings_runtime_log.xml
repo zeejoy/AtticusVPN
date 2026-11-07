@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">Current session log</string>
+    <string name="runtime_log_intro">Records this app process. Background services keep recording; a new process starts a new log. The page refreshes every second. Disconnected devices, observed IPs, times and final traffic remain in this session. Storage is bounded; older entries may be removed with a visible count. WireGuard has no continuous connection state: its duration is an observation window, and the latest handshake is not the first connection time.</string>
+    <string name="runtime_log_privacy">Device IPs are masked by default. Private keys, passwords, Tokens and full configurations are excluded. Copy and Save use the same snapshot currently displayed. Full IPs are private: do not share publicly. External file providers may back up exported files. Screenshots are blocked on this page.</string>
+    <string name="runtime_log_show_full_ips">Show full device IPs (this page only)</string>
+    <string name="runtime_log_masked">Device IPs are masked; Copy and Save also use the masked version.</string>
+    <string name="runtime_log_full_ip_warning">Display, Copy and Save now include full device IPs. Share with care.</string>
+    <string name="runtime_log_copy">Copy current log</string>
+    <string name="runtime_log_save">Save current log as TXT</string>
+    <string name="runtime_log_copied">Current log snapshot copied.</string>
+    <string name="runtime_log_copy_failed">Could not copy. Retry or save to a file.</string>
+    <string name="runtime_log_saved">Saved the log snapshot captured when Save was tapped.</string>
+    <string name="runtime_log_save_failed">Could not save the log. The file provider may be unavailable, permission may be missing, or the export limit may be exceeded. Choose a location and retry.</string>
+    <string name="runtime_log_export_expired">The pending snapshot expired or the page was recreated. Tap Save again; recording continues.</string>
+    <string name="runtime_log_waiting">Waiting for this session’s runtime records…</string>
+</resources>

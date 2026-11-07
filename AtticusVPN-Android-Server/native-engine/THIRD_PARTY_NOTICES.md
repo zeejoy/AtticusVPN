@@ -6,18 +6,18 @@
 |---|---|---|
 | `golang.zx2c4.com/wireguard` | `v0.0.0-20260522210424-ecfc5a8d5446` | 标准 WireGuard Device、UDP bind；MIT |
 | `gvisor.dev/gvisor` | `v0.0.0-20250503011706-39ed1f5ac29c` | 用户态 TCP/IP 栈；Apache-2.0 与其 LICENSE 内的文件特定 MIT 声明 |
-| `golang.org/x/crypto` | `v0.55.0` | 密码学支持／测试；BSD-3-Clause、PATENTS |
-| `golang.org/x/net` | `v0.58.0` | 网络支持；BSD-3-Clause、PATENTS |
+| `golang.org/x/crypto` | `v0.58.0` | 密码学支持／测试；BSD-3-Clause、PATENTS |
+| `golang.org/x/net` | `v0.62.0` | 网络支持；BSD-3-Clause、PATENTS |
 | `github.com/google/btree` | `v1.1.2` | gVisor 间接依赖；Apache-2.0 |
 | `golang.org/x/mobile` | `v0.0.0-20260821190718-4776eadac327` | Android Java/JNI 桥接和构建工具；BSD-3-Clause、PATENTS |
-| `golang.org/x/mod` | `v0.39.0` | 构建工具间接依赖；BSD-3-Clause、PATENTS |
+| `golang.org/x/mod` | `v0.40.0` | 构建工具间接依赖；BSD-3-Clause、PATENTS |
 | `golang.org/x/sync` | `v0.22.0` | 并发支持／构建依赖；BSD-3-Clause、PATENTS |
-| `golang.org/x/sys` | `v0.47.0` | 系统调用支持；BSD-3-Clause、PATENTS |
+| `golang.org/x/sys` | `v0.49.0` | 系统调用支持；BSD-3-Clause、PATENTS |
 | `golang.org/x/time` | `v0.7.0` | gVisor 间接依赖；BSD-3-Clause、PATENTS |
 | `golang.org/x/tools` | `v0.49.0` | gomobile/gobind 构建工具依赖；BSD-3-Clause、PATENTS |
 | `golang.zx2c4.com/wintun` | `v0.0.0-20230126152724-0fa3db229ce2` | wireguard-go 的 Windows 条件依赖；不链接进 Android ABI；MIT |
 
-Go 标准库工具链固定为 `1.27.0`，保留 Go Authors 的 BSD-3-Clause 许可和 PATENTS。直接／间接模块版本以本目录 `go.mod` 为准，下载校验以 `go.sum` 为准。各 pinned x/* 模块的 LICENSE 和 PATENTS 经逐项核对为相同原文，随包只保留一份共享许可及专利声明，仍明确覆盖各模块。
+Go 标准库工具链固定为 `1.27.3`，保留 Go Authors 的 BSD-3-Clause 许可和 PATENTS。直接／间接模块版本以本目录 `go.mod` 为准，下载校验以 `go.sum` 为准。各 pinned x/* 模块的 LICENSE 和 PATENTS 经逐项核对为相同原文，随包只保留一份共享许可及专利声明，仍明确覆盖各模块。
 
 原文在仓库根目录 [LICENSES/](../LICENSES/README.md)：
 

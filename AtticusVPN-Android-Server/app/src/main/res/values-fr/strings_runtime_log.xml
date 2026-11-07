@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">Journal de la session actuelle</string>
+    <string name="runtime_log_intro">Enregistre ce processus d\'application. Les services d\'arrière-plan continuent d\'enregistrer ; un nouveau processus démarre un nouveau journal. La page est actualisée toutes les secondes. Les appareils déconnectés, les adresses IP observées, les heures et le trafic final restent dans cette session. Le stockage est limité ; les entrées plus anciennes peuvent être supprimées avec un décompte visible.  WireGuard n\'a pas d\'état de connexion continue : sa durée est une fenêtre d\'observation et la dernière poignée de main n\'est pas la première heure de connexion.</string>
+    <string name="runtime_log_privacy">Les adresses IP des appareils sont masquées par défaut. Les clés privées, mots de passe, jetons et configurations complètes sont exclus. Copier et Enregistrer utilisent le même instantané actuellement affiché. Les adresses IP complètes sont privées : ne les partagez pas publiquement. Les fournisseurs de fichiers externes peuvent sauvegarder les fichiers exportés. Les captures d\'écran sont bloquées sur cette page.</string>
+    <string name="runtime_log_show_full_ips">Afficher les adresses IP complètes des appareils (cette page uniquement)</string>
+    <string name="runtime_log_masked">Les adresses IP des appareils sont masquées ; Copier et Enregistrer utilisent également la version masquée.</string>
+    <string name="runtime_log_full_ip_warning">L\'affichage, la copie et l\'enregistrement incluent désormais les adresses IP complètes des appareils. Partagez avec soin.</string>
+    <string name="runtime_log_copy">Copier le journal actuel</string>
+    <string name="runtime_log_save">Enregistrer le journal en TXT</string>
+    <string name="runtime_log_copied">Instantané du journal actuel copié.</string>
+    <string name="runtime_log_copy_failed">Impossible de copier. Réessayez ou enregistrez dans un fichier.</string>
+    <string name="runtime_log_saved">Enregistré l\'instantané du journal capturé lorsque vous avez appuyé sur Enregistrer.</string>
+    <string name="runtime_log_save_failed">Impossible d\'enregistrer le journal. Le fournisseur de fichiers peut être indisponible, l\'autorisation est peut-être manquante ou la limite d\'exportation peut être dépassée. Choisissez un emplacement et réessayez.</string>
+    <string name="runtime_log_export_expired">L\'instantané en attente a expiré ou la page a été recréée. Appuyez à nouveau sur Enregistrer ; l\'enregistrement continue.</string>
+    <string name="runtime_log_waiting">En attente des enregistrements d\'exécution de cette session…</string>
+</resources>

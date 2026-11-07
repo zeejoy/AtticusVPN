@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <color name="glass_surface_top">#24FFFFFF</color>
+    <color name="glass_surface_bottom">#127D98BC</color>
+    <color name="glass_lens_top">#38FFFFFF</color>
+    <color name="glass_lens_bottom">#1BA5C1E1</color>
+    <color name="glass_edge_top">#F0FFFFFF</color>
+    <color name="glass_edge_middle">#397D91AB</color>
+    <color name="glass_edge_bottom">#CBFFFFFF</color>
+    <color name="glass_inner_edge">#A0FFFFFF</color>
+    <color name="glass_icon">#263342</color>
+    <color name="glass_icon_selected">#007FFF</color>
+</resources>

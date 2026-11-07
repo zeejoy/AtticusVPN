@@ -48,3 +48,38 @@ release-output/
 # System temporary files
 Thumbs.db
 .DS_Store
+
+# Private VPN profiles, signing settings, runtime state and recovery candidates.
+*.conf
+*.atticus.json
+key.properties
+*signing*.properties
+keystore.properties
+*.enc
+*.enc.new
+*.enc.bak
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.bak
+*.backup
+*.zip
+backups/
+secrets/
+credentials/
+secrets.json
+credentials.json
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+*.crt
+*.cer
+*.csr
+*.der
+*.p7b
+*.p8
+**/bin/
+# Keep only explicitly public examples; private fixtures must never live here.
+!.env.example

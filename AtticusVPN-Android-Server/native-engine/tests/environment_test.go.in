@@ -1,0 +1,37 @@
+// Copyright (c) 2026 TianzeL
+// SPDX-License-Identifier: Apache-2.0
+package main
+import("encoding/json";"fmt";"os";"os/exec";"path/filepath";"runtime";"strings";"testing")
+var goos = runtime.GOOS
+// UPSTREAM_ENVIRON
+func patchedChild(cmd *exec.Cmd) {
+// PATCHED_ENVIRONMENT
+}
+var checkedKeys = []string{"ATTICUS_ENV_PARENT","ATTICUS_ENV_LOCAL","GOPATH","ANDROID_HOME","ANDROID_NDK_HOME","CGO_CFLAGS","GOFLAGS","GOOS","CGO_ENABLED","PATH"}
+func TestChildEnvironment(t *testing.T){
+ if os.Getenv("ATTICUS_ENV_CHILD")!="1"{return}
+ result:=map[string]string{};for _,key:=range checkedKeys{result[key]=os.Getenv(key)}
+ if json.NewEncoder(os.Stdout).Encode(result)!=nil{os.Exit(2)};os.Exit(0)
+}
+func TestPatchedGomobileActuallyInheritsEnvironment(t *testing.T){
+ for _,explicit:=range []bool{true,false}{t.Run(fmt.Sprint(explicit),func(t *testing.T){
+  expected:=map[string]string{"ATTICUS_ENV_PARENT":"TEST_ONLY_PARENT","ATTICUS_ENV_LOCAL":"TEST_ONLY_LOCAL","GOPATH":"TEST ONLY gopath","ANDROID_HOME":"TEST ONLY sdk","ANDROID_NDK_HOME":"TEST ONLY ndk","CGO_CFLAGS":"TEST_ONLY_CGO_FLAGS","GOFLAGS":"TEST_ONLY_GO_FLAGS","GOOS":"android","CGO_ENABLED":"1"}
+  for k,v:=range expected{if k!="ATTICUS_ENV_LOCAL"&&k!="GOOS"&&k!="CGO_ENABLED"{t.Setenv(k,v)}}
+  prefix:=filepath.Join(runtime.GOROOT(),"bin");if explicit{prefix=filepath.Join(t.TempDir(),"go bin with spaces")}
+  if explicit{t.Setenv("ATTICUS_GO_BIN",prefix)}else{t.Setenv("ATTICUS_GO_BIN","")}
+  oldPath:=os.Getenv("PATH")
+  cmd:=exec.Command(os.Args[0],"-test.run=^TestChildEnvironment$")
+  cmd.Env=[]string{"ATTICUS_ENV_CHILD=1","ATTICUS_ENV_LOCAL=TEST_ONLY_LOCAL"}
+  patchedChild(cmd);cmd.Env=environ(cmd.Env)
+  out,err:=cmd.Output();if err!=nil{t.Fatal("child execution failed",err)}
+  got:=map[string]string{};if json.Unmarshal(out,&got)!=nil{t.Fatal("invalid child response")}
+  for k,v:=range expected{if got[k]!=v{t.Errorf("environment key %s was not preserved",k)}}
+  if got["PATH"]!=prefix+string(os.PathListSeparator)+oldPath{t.Fatal("Go path prefix or inherited PATH lost")}
+ })}
+}
+func TestUpstreamWindowsCaseInsensitivePathOverride(t *testing.T){
+ old:=goos;goos="windows";defer func(){goos=old}()
+ t.Setenv("Path",os.Getenv("PATH"))
+ count:=0;for _,entry:=range environ([]string{"pAtH=TEST_ONLY_OVERRIDE"}){key,value,_:=strings.Cut(entry,"=");if strings.EqualFold(key,"PATH"){count++;if value!="TEST_ONLY_OVERRIDE"{t.Fatal("Windows PATH override lost")}}}
+ if count!=1{t.Fatal("duplicate Windows PATH entries")}
+}

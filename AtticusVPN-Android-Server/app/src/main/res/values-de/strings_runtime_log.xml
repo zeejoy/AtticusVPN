@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">Aktuelles Sitzungsprotokoll</string>
+    <string name="runtime_log_intro">Zeichnet diesen App-Prozess auf. Hintergrunddienste zeichnen weiterhin auf; Ein neuer Prozess startet ein neues Protokoll. Die Seite wird jede Sekunde aktualisiert. Getrennte Geräte, beobachtete IPs, Zeiten und endgültiger Datenverkehr bleiben in dieser Sitzung erhalten. Der Speicher ist begrenzt; Ältere Einträge können mit sichtbarer Zählung entfernt werden.  WireGuard hat keinen kontinuierlichen Verbindungsstatus: Seine Dauer ist ein Beobachtungsfenster, und der letzte Handshake ist nicht die erste Verbindungszeit.</string>
+    <string name="runtime_log_privacy">Geräte-IPs sind standardmäßig maskiert. Ausgenommen sind private Schlüssel, Passwörter, Token und vollständige Konfigurationen. Beim Kopieren und Speichern wird der aktuell angezeigte Schnappschuss verwendet. Vollständige IPs sind privat und dürfen nicht öffentlich geteilt werden. Externe Dateianbieter können exportierte Dateien sichern. Screenshots sind auf dieser Seite blockiert.</string>
+    <string name="runtime_log_show_full_ips">Vollständige Geräte-IPs anzeigen (nur diese Seite)</string>
+    <string name="runtime_log_masked">Geräte-IPs werden maskiert; Beim Kopieren und Speichern wird auch die maskierte Version verwendet.</string>
+    <string name="runtime_log_full_ip_warning">Anzeigen, Kopieren und Speichern umfassen jetzt vollständige Geräte-IPs. Mit Bedacht teilen.</string>
+    <string name="runtime_log_copy">Aktuelles Protokoll kopieren</string>
+    <string name="runtime_log_save">Aktuelles Protokoll als TXT speichern</string>
+    <string name="runtime_log_copied">Aktueller Protokoll-Snapshot kopiert.</string>
+    <string name="runtime_log_copy_failed">Konnte nicht kopiert werden. Versuchen Sie es noch einmal oder speichern Sie es in einer Datei.</string>
+    <string name="runtime_log_saved">Der beim Tippen auf „Speichern“ erfasste Protokoll-Schnappschuss wurde gespeichert.</string>
+    <string name="runtime_log_save_failed">Das Protokoll konnte nicht gespeichert werden. Möglicherweise ist der Dateianbieter nicht verfügbar, die Berechtigung fehlt möglicherweise oder das Exportlimit wurde überschritten. Wählen Sie einen Standort und versuchen Sie es erneut.</string>
+    <string name="runtime_log_export_expired">Der ausstehende Snapshot ist abgelaufen oder die Seite wurde neu erstellt. Tippen Sie erneut auf Speichern. Die Aufnahme wird fortgesetzt.</string>
+    <string name="runtime_log_waiting">Warten auf die Laufzeitaufzeichnungen dieser Sitzung…</string>
+</resources>

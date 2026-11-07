@@ -51,6 +51,7 @@ public final class AtticusServerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().start(this);
         // 构造不触发 su；Root 队列不与 WireGuard 或仓库初始化共用。
         deviceChecks = DeviceCheckController.create();
         repository = new EncryptedStateRepository(this);

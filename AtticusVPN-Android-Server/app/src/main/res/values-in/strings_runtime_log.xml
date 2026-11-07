@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">Log sesi saat ini</string>
+    <string name="runtime_log_intro">Rekam proses aplikasi ini. Layanan latar belakang terus merekam; proses baru memulai log baru. Halaman disegarkan setiap detik. Perangkat yang terputus, IP yang diamati, waktu, dan lalu lintas akhir tetap berada di sesi ini. Penyimpanan dibatasi; entri lama dapat dihapus dengan hitungan yang terlihat.  WireGuard tidak memiliki status koneksi berkelanjutan: durasinya adalah jendela observasi, dan jabat tangan terakhir bukanlah waktu koneksi pertama.</string>
+    <string name="runtime_log_privacy">IP perangkat ditutupi secara default. Kunci pribadi, kata sandi, Token, dan konfigurasi lengkap tidak termasuk. Salin dan Simpan menggunakan snapshot yang sama yang sedang ditampilkan. IP lengkap bersifat pribadi: jangan dibagikan secara publik. Penyedia file eksternal dapat mencadangkan file yang diekspor. Tangkapan layar diblokir di halaman ini.</string>
+    <string name="runtime_log_show_full_ips">Tampilkan IP perangkat lengkap (hanya halaman ini)</string>
+    <string name="runtime_log_masked">IP perangkat ditutupi; Copy dan Save juga menggunakan versi yang di-mask.</string>
+    <string name="runtime_log_full_ip_warning">Tampilkan, Salin, dan Simpan sekarang menyertakan IP perangkat lengkap. Bagikan dengan hati-hati.</string>
+    <string name="runtime_log_copy">Salin log saat ini</string>
+    <string name="runtime_log_save">Simpan log saat ini sebagai TXT</string>
+    <string name="runtime_log_copied">Snapshot log saat ini disalin.</string>
+    <string name="runtime_log_copy_failed">Tidak dapat menyalin. Coba lagi atau simpan ke file.</string>
+    <string name="runtime_log_saved">Menyimpan snapshot log yang diambil saat Simpan diketuk.</string>
+    <string name="runtime_log_save_failed">Tidak dapat menyimpan log. Penyedia file mungkin tidak tersedia, izin mungkin hilang, atau batas ekspor mungkin terlampaui. Pilih lokasi dan coba lagi.</string>
+    <string name="runtime_log_export_expired">Snapshot yang tertunda telah habis masa berlakunya atau halaman telah dibuat ulang. Ketuk Simpan lagi; perekaman berlanjut.</string>
+    <string name="runtime_log_waiting">Menunggu catatan runtime sesi ini…</string>
+</resources>

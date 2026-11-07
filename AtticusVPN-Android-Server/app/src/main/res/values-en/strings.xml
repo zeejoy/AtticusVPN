@@ -2,9 +2,9 @@
 <resources>
     <string name="brand_wordmark">AtticusVPN</string>
     <string name="server_wordmark_suffix">Server</string>
-    <string name="page_information">1, information and server controls</string>
+    <string name="page_information">1, Home and server controls</string>
     <string name="page_peers">2, Peer management</string>
-    <string name="page_connection">3, connection and DDNS settings</string>
+    <string name="page_connection">3, IP information</string>
     <string name="appearance">Appearance</string>
     <string name="appearance_dark">Dark</string>
     <string name="appearance_light">Light</string>
@@ -30,10 +30,9 @@
     <string name="check_root">Check Root again</string>
     <string name="request_root">Request Root again</string>
     <string name="root_dialog_title">Request existing Root access and run read-only checks</string>
-    <string name="root_dialog_message">Verifies uid=0 and reads XFRM, UDP 500/4500 usage, forwarding settings and SELinux status. Does not change routes, firewall rules, system files or SELinux, or stop WireGuard. Your Root manager may request permission for each read-only check. This preview cannot start IKEv2; Root authorization does not prove IPsec availability.</string>
+    <string name="root_dialog_message">Verifies uid=0 and reads XFRM, UDP 500/4500 usage, forwarding and SELinux status. Does not change routes, firewall, system files or SELinux, or stop WireGuard. Your Root manager may prompt for each check. This check does not start IKEv2; use the IKEv2 management page to start the service.</string>
     <string name="cancel">Cancel</string>
     <string name="start_read_check">Start read-only checks</string>
-    <string name="ikev2_preview">Apple native VPN / IKEv2: in development and currently locked. Standard ports: UDP 500 / 4500, separate from WireGuard. New WireGuard installations default to port 51820; existing ports are preserved.</string>
     <string name="connection_settings">Connection settings</string>
     <string name="endpoint_label">Hostname or public IPv6</string>
     <string name="endpoint_help">The address clients use to reach this server. Enter a hostname or public IPv6 address without brackets. Leave empty to use the configured DDNS hostname or current public IPv6.</string>
@@ -78,7 +77,7 @@
     <string name="peer_section">Peer devices</string>
     <string name="add_peer">Add peer</string>
     <string name="seal_help">After export, you can seal a peer to remove its exportable private key from this phone. Existing devices can still connect.</string>
-    <string name="footer">Author: TianzeL · AtticusVPN %1$s · Standard protocols; no traffic camouflage or detection evasion</string>
+    <string name="footer">TianzeL · AtticusVPN %1$s</string>
     <string name="no_peers">No peers have been added.</string>
     <string name="sealed">Sealed</string>
     <string name="exportable">Exportable</string>
@@ -176,7 +175,7 @@
     <string name="ikev2_root_denied">Root authorization denied; you can request it again. WireGuard is unaffected</string>
     <string name="ikev2_kernel_unsupported">The device kernel does not support the required IPsec features</string>
     <string name="ikev2_xfrm_unavailable">XFRM read-only checks did not pass; permission, tool or kernel limitations may be responsible</string>
-    <string name="ikev2_dataplane_unavailable">This preview does not include a runnable IKEv2 service; the IPsec data plane is unverified</string>
+    <string name="ikev2_dataplane_unavailable">Capability snapshot obtained; the actual IPsec data plane remains unverified. Start and verify it in IKEv2 management.</string>
     <string name="ikev2_port_conflict">UDP 500 / 4500 usage observed; IKEv2 has not been started</string>
     <string name="ikev2_error">Root or device check failed; retry manually</string>
     <string name="check_idle">Not checked yet; runs automatically when the information page opens</string>
@@ -199,7 +198,6 @@
     <string name="ipv6_non_global">Only non-global IPv6 observed; public reachability is unproven</string>
     <string name="ipv6_failed">Could not read IPv6 interfaces</string>
     <string name="root_provider_unknown">Unknown Root provider</string>
-    <string name="app_name">AtticusVPN Server</string>
     <string name="server_channel">VPN server</string>
     <string name="server_channel_description">Shows AtticusVPN Server status and network recovery</string>
     <string name="server_running">AtticusVPN Server is running</string>
@@ -244,5 +242,23 @@
     <string name="wg_conf_failed">The configuration export failed or was interrupted. Please try again.</string>
     <string name="wg_config_copied">WireGuard configuration copied. It contains the client private key; keep your clipboard secure.</string>
     <string name="wg_copy_failed">Cannot copy the configuration. Try again or save the .conf file.</string>
+
+
+    <string name="background_title">Lock screen &amp; background</string>
+    <string name="background_explanation">Running VPN servers use foreground notifications and CPU wake locks to keep working with the screen off. Granting access does not start a server.</string>
+    <string name="background_one_click">Check &amp; request access</string>
+    <string name="background_consent">Android will ask you to allow notifications and exclude this app from battery optimization. You choose each result. Continuous service uses more battery; manufacturer startup or unrestricted battery settings may also need manual setup.</string>
+    <string name="background_continue">Continue</string>
+    <string name="background_notification_settings">Notification settings</string>
+    <string name="background_app_settings">App details &amp; manufacturer settings</string>
+    <string name="background_oem_help">In system app details, choose unrestricted battery use and allow automatic startup/background activity if your phone provides these options. Some brands also require locking the app in recent tasks. Android cannot verify all manufacturer switches. Screen locking should not stop the service, but force-stop, reboot, network loss, system termination or lost Root access can interrupt it. This feature does not retry Root or start at boot.</string>
+    <string name="background_settings_unavailable">This system page is unavailable. Search system settings for battery optimization or app permissions.</string>
+    <string name="background_status">Notifications: %1$s\nBattery optimization exemption: %2$s\nSystem background restriction: %3$s</string>
+    <string name="background_allowed">Allowed</string>
+    <string name="background_needs_setup">Not allowed; setup available</string>
+    <string name="background_restricted">Restricted; review app details</string>
+    <string name="background_not_restricted">No system restriction detected</string>
+    <string name="background_finished">Check finished. The status above reflects actual system access. Unapproved items can be configured later.</string>
     <string name="peer_revoked_service_stopped">Peer revoked. Authorization synchronization failed, so the VPN service was stopped. Check the settings before restarting.</string>
+    <string name="ikev2_preview">Apple native VPN / IKEv2: in development and currently locked. Standard ports: UDP 500 / 4500, separate from WireGuard. New WireGuard installations default to port 51820; existing ports are preserved.</string>
 </resources>

@@ -40,3 +40,11 @@ Android Server 只复用 tunnel 的 Java 类型，构建明确排除该客户端
 - [Kotlin stdlib 2.2.10 官方 POM](https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.2.10/kotlin-stdlib-2.2.10.pom)、[annotations 13.0 官方 POM](https://repo1.maven.org/maven2/org/jetbrains/annotations/13.0/annotations-13.0.pom)。
 - [Apache 官方许可原文](https://www.apache.org/licenses/LICENSE-2.0.txt)、[许可 FAQ](https://www.apache.org/foundation/license-faq.html)。
 - 各原文的版本来源、范围和校验值见 [LICENSES/README.md](LICENSES/README.md)。保留的上游公开作者姓名或联系信息属于原始归属，不是项目作者的个人信息。
+
+## 正式版 0.6.0 界面复用
+
+玻璃材质、设置图标、分页和日志组件来自 TianzeL 的既有测试版项目，沿用 Apache-2.0。Robolectric 4.17 仅作为主机测试依赖，MIT 原文见 LICENSES/Robolectric-4.17-MIT.txt，不打入 APK。AndroidX annotation 1.9.1 仅增加编译期引用，与既有 WireGuard 依赖版本相同，无新增运行时网络/翻译 SDK。
+
+## 本轮 0.6.0 发布材料补充
+
+完整 desugar 2.1.5 对应源码随二进制交付，文件名、校验值和构建边界见 [对应源码说明](docs/CORRESPONDING-SOURCE-STABLE-0.6.0.md)。Guava 33.7.2-jre 为 Robolectric 的测试期安全约束（Apache-2.0），不进入 APK；解析依赖清单与漏洞查询分别核验测试和运行配置。

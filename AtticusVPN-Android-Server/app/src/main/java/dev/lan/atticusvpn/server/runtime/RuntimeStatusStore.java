@@ -24,6 +24,8 @@ public final class RuntimeStatusStore {
 
     public static void publish(final RuntimeStatus status) {
         current = status;
+        dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().runtime(
+                dev.lan.atticusvpn.server.logging.RunLogModel.Protocol.WG,status);
         for (final Listener listener : LISTENERS) {
             MAIN.post(() -> listener.onRuntimeStatus(status));
         }

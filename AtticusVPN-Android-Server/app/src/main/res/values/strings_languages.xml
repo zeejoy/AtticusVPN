@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <!-- Native names deliberately remain recognizable in every display language. -->
+    <string name="language_spanish" translatable="false">Español</string>
+    <string name="language_french" translatable="false">Français</string>
+    <string name="language_german" translatable="false">Deutsch</string>
+    <string name="language_portuguese" translatable="false">Português (Brasil)</string>
+    <string name="language_russian" translatable="false">Русский</string>
+    <string name="language_arabic" translatable="false">العربية</string>
+    <string name="language_hindi" translatable="false">हिन्दी</string>
+    <string name="language_japanese" translatable="false">日本語</string>
+    <string name="language_korean" translatable="false">한국어</string>
+    <string name="language_indonesian" translatable="false">Bahasa Indonesia</string>
+</resources>

@@ -75,8 +75,7 @@ func (c *dnsCache) get(query []byte) ([]byte, bool) {
 
 func (c *dnsCache) put(query, response []byte) {
 	key, err := dnsQuestionKey(query)
-	if err != nil || len(response) < 12 || len(response) > maxDNSPacket ||
-		binary.BigEndian.Uint16(query[:2]) != binary.BigEndian.Uint16(response[:2]) {
+	if err != nil || !validDNSResponse(query, response) || dnsResponseTruncated(response) {
 		return
 	}
 	ttl, ok := responseTTL(response)

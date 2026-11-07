@@ -38,7 +38,8 @@ FORBIDDEN_SEGMENTS = {
 FORBIDDEN_SUFFIXES = {
     ".aar", ".apk", ".aab", ".so", ".dex", ".class", ".keystore", ".jks",
     ".p12", ".pfx", ".pem", ".key", ".log", ".dmp", ".exe", ".dll",
-    ".zip", ".bak", ".tmp", ".sqlite", ".db", ".conf",
+    ".zip", ".bak", ".backup", ".new", ".tmp", ".sqlite", ".db", ".conf",
+    ".enc", ".p8", ".crt", ".cer", ".csr", ".der", ".p7b",
 }
 REQUIRED = {
     "LICENSE", "NOTICE", "README.md", "THIRD_PARTY_NOTICES.md",
@@ -92,7 +93,7 @@ KNOWN_PUBLIC_HOSTS = {
     "freedns.afraid.org", "developer.android.com", "schemas.android.com",
     "developer.apple.com", "www.cloudflare.com", "www.microsoft.com",
     "www.baidu.com", "www.bilibili.com", "proxy.golang.org", "sum.golang.org",
-    "go.dev", "pkg.go.dev", "go.googlesource.com", "docs.strongswan.org",
+    "go.dev", "pkg.go.dev", "vuln.go.dev", "go.googlesource.com", "docs.strongswan.org",
     "docs.oracle.com", "opensource.org", "www.gnu.org", "www.zxing.org",
     "zxing.github.io", "openjdk.java.net", "openjdk.org", "source.android.com",
     "spdx.org", "www.spdx.org", "git.zx2c4.com", "gvisor.dev",
@@ -151,7 +152,11 @@ class Audit:
             self.record(name, "outside-android-server-scope")
         if path.suffix.lower() in FORBIDDEN_SUFFIXES:
             self.record(name, "excluded-file-type")
-        if path.name in {"local.properties", ".env", "id_rsa", "id_ed25519"}:
+        if (path.name in {"local.properties", ".env", "key.properties", "signing.properties",
+                         "keystore.properties", "secrets.json", "credentials.json"}
+                or path.name.startswith(("id_rsa", "id_dsa", "id_ecdsa", "id_ed25519"))
+                or path.name.endswith(".atticus.json")
+                or ("signing" in path.name.lower() and path.suffix==".properties")):
             self.record(name, "local-configuration-or-secret")
         if path.suffix.lower() == ".jar" and name != "gradle/wrapper/gradle-wrapper.jar":
             self.record(name, "unexpected-binary-archive")

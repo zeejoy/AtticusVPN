@@ -71,7 +71,7 @@ public final class SettingsNavigationResourcesTest {
         }
     }
 
-    @Test public void arrowAssetIsSmallVectorAndKeepsTheRequestedLeftDirection() throws Exception {
+    @Test public void arrowAssetIsSmallVectorAndMirrorsOnlyForRtl() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         Element vector = factory.newDocumentBuilder().parse(mainPath("res/drawable/ic_settings_back.xml").toFile())
@@ -79,7 +79,7 @@ public final class SettingsNavigationResourcesTest {
         assertEquals("vector", vector.getTagName());
         assertEquals("24dp", vector.getAttribute("android:width"));
         assertEquals("24dp", vector.getAttribute("android:height"));
-        assertEquals("false", vector.getAttribute("android:autoMirrored"));
+        assertEquals("true", vector.getAttribute("android:autoMirrored"));
         Element path = (Element) vector.getElementsByTagName("path").item(0);
         assertNotNull(path);
         assertTrue(path.getAttribute("android:pathData").contains("L4,12"));

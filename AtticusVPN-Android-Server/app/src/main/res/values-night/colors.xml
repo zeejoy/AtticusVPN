@@ -5,11 +5,12 @@
     <color name="black">#F9FAFB</color>
     <color name="atticus_secondary">#C2CBD6</color>
     <color name="atticus_card">#202A35</color>
+    <color name="home_card_border">#295E7798</color>
+    <color name="home_secondary_button">#263443</color>
+    <color name="home_running">#52D69C</color>
+    <color name="home_error">#FF9E9E</color>
     <color name="terminal_background">#000000</color>
     <color name="terminal_text">#FFFFFF</color>
     <color name="terminal_border">#5A6672</color>
     <color name="terminal_scroll_track">#303840</color>
-    <color name="navigation_border">#3C4858</color>
-    <color name="navigation_selected">#007FFF</color>
-    <color name="navigation_selected_text">#FFFFFF</color>
 </resources>

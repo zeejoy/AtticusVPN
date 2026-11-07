@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="vpn_settings">إعدادات VPN</string>
+    <string name="home_receive">المستلم  %1$s</string>
+    <string name="home_transmit">المرسل  %1$s</string>
+    <string name="home_recent_devices">الأجهزة النشطة مؤخرًا</string>
+    <string name="home_running">الخادم يعمل</string>
+    <string name="home_stopped">الخادم متوقف</string>
+    <string name="home_starting">جارٍ تشغيل الخادم…</string>
+    <string name="home_stopping">جارٍ إيقاف الخادم…</string>
+    <string name="home_waiting">بانتظار الشبكة</string>
+    <string name="home_failed">الخادم يحتاج إلى تدخل</string>
+    <string name="home_wg_stats_note">حركة الخادم · النشاط مستنتج من المصافحات الأخيرة</string>
+    <string name="home_protocol_information">%1$s · معلومات IP</string>
+</resources>

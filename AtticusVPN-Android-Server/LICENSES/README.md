@@ -21,7 +21,7 @@ AndroidX、JUnit、Hamcrest 与 Gradle Wrapper 原文从固定版本构件内原
 | `gVisor-LICENSE.txt` | gVisor commit `39ed1f5ac29c` 的完整 LICENSE，包含原 Apache-2.0 正文及文件特定 MIT 附录 |
 | `google-btree-Apache-2.0.txt` | google/btree `v1.1.2` 模块 LICENSE |
 | `Go-BSD-3-Clause.txt`、`Go-PATENTS.txt` | x/mobile commit `4776eadac327` 原文；逐字节核对也适用于 go.mod 固定的 x/crypto、x/net、x/mod、x/sync、x/sys、x/time、x/tools |
-| `Go-standard-library-BSD-3-Clause.txt`、`Go-standard-library-PATENTS.txt` | Go `1.27.0` 工具链根 LICENSE／PATENTS，适用于链接的 Go 标准库 |
+| `Go-standard-library-BSD-3-Clause.txt`、`Go-standard-library-PATENTS.txt` | Go `1.27.3` 工具链根 LICENSE／PATENTS，适用于链接的 Go 标准库 |
 | `ZXing-LICENSE.txt`、`ZXing-NOTICE.txt` | [ZXing 标签 zxing-3.5.4](https://github.com/zxing/zxing/tree/zxing-3.5.4) 的完整原始 LICENSE／NOTICE；保留其中附加归属，不裁剪为仅 Apache 文本 |
 | `AndroidX-annotation-LICENSE.txt` | `annotation-jvm:1.9.1` JAR 的 `META-INF/androidx/annotation/annotation/LICENSE.txt` |
 | `AndroidX-collection-LICENSE.txt` | `collection-jvm:1.5.0` JAR 的 `META-INF/androidx/collection/collection/LICENSE.txt` |

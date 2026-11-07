@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">本次執行日誌</string>
+    <string name="runtime_log_intro">記錄本次應用程式處理程序的執行情況；背景服務繼續記錄，處理程序重新建立後開始新日誌。頁面每秒更新，已中斷裝置、觀察到的 IP、時間和最終流量在本次記錄內保留。記錄有容量上限，較早項目可能被清理並顯示計數。WireGuard 沒有持續連線狀態：所示時長是觀察視窗，最近交握不等於首次連線時間。</string>
+    <string name="runtime_log_privacy">日誌預設遮蓋裝置 IP，不記錄私鑰、密碼、Token 或完整設定。複製和儲存使用目前顯示的同一份快照。完整 IP 屬於隱私資訊，請勿公開分享；外部檔案提供者可能自行備份匯出的檔案。本頁面禁止擷取螢幕。</string>
+    <string name="runtime_log_show_full_ips">顯示完整裝置 IP（僅本頁有效）</string>
+    <string name="runtime_log_masked">裝置 IP 已遮蓋；複製和儲存同樣使用遮蓋版本。</string>
+    <string name="runtime_log_full_ip_warning">目前顯示、複製和儲存將包含完整裝置 IP，請謹慎分享。</string>
+    <string name="runtime_log_copy">複製目前日誌</string>
+    <string name="runtime_log_save">將目前日誌儲存為 TXT</string>
+    <string name="runtime_log_copied">已複製目前日誌快照。</string>
+    <string name="runtime_log_copy_failed">無法複製，請重試或儲存為檔案。</string>
+    <string name="runtime_log_saved">已儲存點選「儲存」時的日誌快照。</string>
+    <string name="runtime_log_save_failed">日誌儲存失敗；可能是檔案提供者無法使用、未授權或內容超出匯出上限。請重新選擇位置後重試。</string>
+    <string name="runtime_log_export_expired">待儲存快照已過期或頁面已重新建立，請再次點選儲存。日誌記錄仍在繼續。</string>
+    <string name="runtime_log_waiting">正在等候本次執行記錄…</string>
+</resources>

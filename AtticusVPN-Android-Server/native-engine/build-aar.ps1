@@ -15,7 +15,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$PinnedGoVersion = 'go1.27.0'
+$PinnedGoVersion = 'go1.27.3'
 $PinnedMobileVersion = 'v0.0.0-20260821190718-4776eadac327'
 $PinnedMobileSum = 'h1:D/wiQ6AoTYjDtSD0HMPhU8O40NUP8EF0UmDhIYCnG4I='
 $PinnedMobileGoModSum = 'h1:D9q8rgXu13Q3uuM+Vuy6F/DG1WF/giTPLtqQ9on5B1M='
@@ -96,16 +96,24 @@ function Invoke-Captured {
         [string]$WorkingDirectory = $NativeRoot
     )
 
+    # Native tools can write progress to stderr while stdout contains JSON.
+    # Keep both streams separate, including on Windows PowerShell 5.1.
+    $captureErrorFile = [IO.Path]::GetTempFileName()
     Push-Location -LiteralPath $WorkingDirectory
     try {
-        $captured = & $FilePath @Arguments 2>&1
+        $captured = & $FilePath @Arguments 2> $captureErrorFile
+        $captureErrorText = [IO.File]::ReadAllText($captureErrorFile)
         if ($LASTEXITCODE -ne 0) {
-            throw "命令失败（退出码 $LASTEXITCODE）：$FilePath $($Arguments -join ' ')`n$($captured -join [Environment]::NewLine)"
+            throw "命令失败（退出码 $LASTEXITCODE）：$FilePath $($Arguments -join ' ')`n$($captured -join [Environment]::NewLine)`n$captureErrorText"
+        }
+        if (-not [string]::IsNullOrWhiteSpace($captureErrorText)) {
+            Write-Verbose $captureErrorText
         }
         return ($captured -join [Environment]::NewLine)
     }
     finally {
         Pop-Location
+        Remove-Item -LiteralPath $captureErrorFile -ErrorAction SilentlyContinue
     }
 }
 
@@ -363,7 +371,7 @@ function Test-Aar {
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-$GoExe = Resolve-Executable -Candidate $GoExe -Fallback ('go' + $ExecutableSuffix) -Name 'Go 1.27.0'
+$GoExe = Resolve-Executable -Candidate $GoExe -Fallback ('go' + $ExecutableSuffix) -Name 'Go 1.27.3'
 $JavaHome = Resolve-Directory -Candidate $JavaHome -EnvironmentName 'JAVA_HOME' `
     -Fallback '' -Name 'JDK 17'
 $defaultSdk = [Environment]::GetEnvironmentVariable('ANDROID_SDK_ROOT', 'Process')

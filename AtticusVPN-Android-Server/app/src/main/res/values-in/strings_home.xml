@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="vpn_settings">Pengaturan VPN</string>
+    <string name="home_receive">Diterima  %1$s</string>
+    <string name="home_transmit">Dikirim  %1$s</string>
+    <string name="home_recent_devices">Perangkat aktif baru-baru ini</string>
+    <string name="home_running">Server berjalan</string>
+    <string name="home_stopped">Server dihentikan</string>
+    <string name="home_starting">Memulai server…</string>
+    <string name="home_stopping">Menghentikan server…</string>
+    <string name="home_waiting">Menunggu jaringan</string>
+    <string name="home_failed">Server perlu diperiksa</string>
+    <string name="home_wg_stats_note">Trafik server · Aktivitas diperkirakan dari handshake terbaru</string>
+    <string name="home_protocol_information">%1$s · Informasi IP</string>
+</resources>

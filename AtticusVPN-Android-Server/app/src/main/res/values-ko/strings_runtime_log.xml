@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2026 TianzeL; SPDX-License-Identifier: Apache-2.0 -->
+<resources>
+    <string name="runtime_log_title">현재 세션 로그</string>
+    <string name="runtime_log_intro">이 앱 프로세스를 기록합니다. 백그라운드 서비스는 계속 녹음합니다. 새로운 프로세스는 새로운 로그를 시작합니다. 페이지는 매초마다 새로 고쳐집니다. 연결이 끊긴 장치, 관찰된 IP, 시간 및 최종 트래픽이 이 세션에 유지됩니다. 저장 공간은 제한되어 있습니다. 이전 항목은 눈에 보이는 개수로 제거될 수 있습니다.  WireGuard에는 지속적인 연결 상태가 없습니다. 해당 기간은 관찰 창이며 최신 핸드셰이크는 첫 번째 연결 시간이 아닙니다.</string>
+    <string name="runtime_log_privacy">장치 IP는 기본적으로 마스킹됩니다. 개인 키, 비밀번호, 토큰 및 전체 구성은 제외됩니다. 복사 및 저장은 현재 표시된 것과 동일한 스냅샷을 사용합니다. 전체 IP는 비공개이므로 공개적으로 공유하지 마세요. 외부 파일 공급자는 내보낸 파일을 백업할 수 있습니다. 이 페이지에서는 스크린샷이 차단되었습니다.</string>
+    <string name="runtime_log_show_full_ips">전체 장치 IP 표시(이 페이지에만 해당)</string>
+    <string name="runtime_log_masked">장치 IP는 마스킹됩니다. 복사 및 저장도 마스크 버전을 사용합니다.</string>
+    <string name="runtime_log_full_ip_warning">이제 표시, 복사 및 저장에 전체 장치 IP가 포함됩니다. 주의해서 공유하세요.</string>
+    <string name="runtime_log_copy">현재 로그 복사</string>
+    <string name="runtime_log_save">현재 로그를 TXT로 저장</string>
+    <string name="runtime_log_copied">현재 로그 스냅샷이 복사되었습니다.</string>
+    <string name="runtime_log_copy_failed">복사할 수 없습니다. 다시 시도하거나 파일에 저장하세요.</string>
+    <string name="runtime_log_saved">저장을 탭했을 때 캡처된 로그 스냅샷을 저장했습니다.</string>
+    <string name="runtime_log_save_failed">로그를 저장할 수 없습니다. 파일 제공자를 사용할 수 없거나 권한이 누락되었거나 내보내기 제한이 초과되었을 수 있습니다. 위치를 선택하고 다시 시도하세요.</string>
+    <string name="runtime_log_export_expired">보류 중인 스냅샷이 만료되었거나 페이지가 다시 생성되었습니다. 저장을 다시 탭하세요. 녹음은 계속됩니다.</string>
+    <string name="runtime_log_waiting">이 세션의 런타임 기록을 기다리는 중…</string>
+</resources>

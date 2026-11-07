@@ -12,6 +12,7 @@ import android.util.AtomicFile;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +46,14 @@ final class KeystoreBlob {
         this.file = new AtomicFile(new File(context.getNoBackupFilesDir(), filename));
     }
 
-    boolean exists() { return file.getBaseFile().isFile(); }
+    // AtomicFile may retain only a legacy backup after an interrupted write.
+    // An unfinished new file or an unexpected directory must fail closed too:
+    // neither means that it is safe to replace the user's server identity.
+    boolean exists() {
+        final File base = file.getBaseFile();
+        return base.exists() || new File(base + ".bak").exists()
+                || new File(base + ".new").exists();
+    }
 
     void write(final byte[] plaintext) throws Exception {
         final SecretKey key = getOrCreateKey();
@@ -63,6 +71,18 @@ final class KeystoreBlob {
             stream.write(output);
             file.finishWrite(stream);
             stream = null;
+            // AtomicFile.finishWrite reports some sync/rename failures only via
+            // platform logging. Confirm the committed bytes before publishing
+            // state or allowing Peer cleanup. openRead also rolls back a retained
+            // legacy backup if finishWrite could not remove it.
+            final byte[] committed = readRaw(file.openRead());
+            try {
+                if (!Arrays.equals(output, committed)) {
+                    throw new SecurityException("encrypted state commit unavailable");
+                }
+            } finally {
+                Arrays.fill(committed, (byte) 0);
+            }
         } finally {
             if (stream != null) {
                 file.failWrite(stream);
@@ -73,11 +93,30 @@ final class KeystoreBlob {
     }
 
     byte[] read() throws Exception {
-        if (!exists()) {
+        final boolean hadState = exists();
+        final File backup = new File(file.getBaseFile() + ".bak");
+        if (backup.exists()) {
+            // AtomicFile replaces the base with its authoritative legacy backup.
+            // Authenticate it first so a damaged/unreadable backup cannot destroy
+            // either recovery candidate. Never create a key on a read path.
+            final byte[] checked = decrypt(readRaw(new FileInputStream(backup)));
+            Arrays.fill(checked, (byte) 0);
+        }
+        final FileInputStream stream;
+        try {
+            // openRead performs Android's recovery before we decide it is a new install.
+            stream = file.openRead();
+        } catch (final FileNotFoundException missing) {
+            if (hadState || exists()) {
+                throw new SecurityException("encrypted state recovery unavailable");
+            }
             return null;
         }
-        final byte[] raw;
-        try (FileInputStream input = file.openRead();
+        return decrypt(readRaw(stream));
+    }
+
+    private static byte[] readRaw(final FileInputStream stream) throws Exception {
+        try (FileInputStream input = stream;
              ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             final byte[] buffer = new byte[8192];
             int count;
@@ -87,10 +126,14 @@ final class KeystoreBlob {
                     throw new SecurityException("encrypted state too large");
                 }
             }
-            raw = output.toByteArray();
             Arrays.fill(buffer, (byte) 0);
+            return output.toByteArray();
         }
+    }
+
+    private byte[] decrypt(final byte[] raw) throws Exception {
         try {
+            if (raw.length < 34) throw new SecurityException("encrypted state header invalid");
             final ByteBuffer frame = ByteBuffer.wrap(raw);
             final byte[] magic = new byte[4];
             frame.get(magic);
@@ -133,6 +176,9 @@ final class KeystoreBlob {
         store.load(null);
         if (store.containsAlias(alias)) {
             return (SecretKey) store.getKey(alias, null);
+        }
+        if (exists()) {
+            throw new SecurityException("encrypted state key unavailable");
         }
         final KeyGenerator generator = KeyGenerator.getInstance(
                 KeyProperties.KEY_ALGORITHM_AES,

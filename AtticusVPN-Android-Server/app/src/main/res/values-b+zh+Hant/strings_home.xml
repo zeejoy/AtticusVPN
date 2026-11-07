@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="vpn_settings">VPN 設定</string>
+    <string name="home_receive">接收  %1$s</string>
+    <string name="home_transmit">傳送  %1$s</string>
+    <string name="home_recent_devices">近期活躍裝置</string>
+    <string name="home_running">伺服器執行中</string>
+    <string name="home_stopped">伺服器已停止</string>
+    <string name="home_starting">正在啟動伺服器…</string>
+    <string name="home_stopping">正在停止伺服器…</string>
+    <string name="home_waiting">等待網路恢復</string>
+    <string name="home_failed">伺服器需要處理</string>
+    <string name="home_wg_stats_note">伺服器收發流量 · 活躍狀態依近期交握判斷</string>
+    <string name="home_protocol_information">%1$s · IP 資訊</string>
+</resources>

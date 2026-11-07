@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.*;
 import dev.lan.atticusvpn.server.runtime.ServerNetworkProbe;
 
-/** 无模拟 Root / 网络结果；这里只验证三语资源与存储语言码的约束。 */
+/** 无模拟 Root / 网络结果；这里只验证语言资源与存储语言码的约束。 */
 public final class LocalizationResourcesTest {
     private static Path mainPath(String relative) {
         Path path = Path.of("src/main", relative);
@@ -30,13 +30,20 @@ public final class LocalizationResourcesTest {
     private static Map<String, String> strings(String directory) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-        NodeList nodes = factory.newDocumentBuilder().parse(mainPath("res/" + directory + "/strings.xml").toFile()).getElementsByTagName("string");
         Map<String, String> values = new HashMap<>();
-        for (int index = 0; index < nodes.getLength(); index++) {
-            Element element = (Element) nodes.item(index);
-            if ("false".equals(element.getAttribute("translatable"))) continue;
-            String name = element.getAttribute("name");
-            assertNull("Duplicate resource: " + name, values.put(name, element.getTextContent()));
+        // Feature strings are split into separate files; cover their translations too.
+        Path base = mainPath("res/" + directory + "/strings.xml").getParent();
+        try (java.util.stream.Stream<Path> files = Files.list(base)) {
+            for (Path file : files.filter(path -> path.getFileName().toString().startsWith("strings")
+                    && path.getFileName().toString().endsWith(".xml")).toList()) {
+                NodeList nodes = factory.newDocumentBuilder().parse(file.toFile()).getElementsByTagName("string");
+                for (int index = 0; index < nodes.getLength(); index++) {
+                    Element element = (Element) nodes.item(index);
+                    if ("false".equals(element.getAttribute("translatable"))) continue;
+                    String name = element.getAttribute("name");
+                    assertNull("Duplicate resource: " + name, values.put(name, element.getTextContent()));
+                }
+            }
         }
         return values;
     }
@@ -88,11 +95,45 @@ public final class LocalizationResourcesTest {
         assertEquals("en", AppLanguage.normalize(null));
         assertEquals("en", AppLanguage.normalize(""));
         assertEquals("en", AppLanguage.normalize(" "));
-        assertEquals("en", AppLanguage.normalize("fr"));
+        assertEquals("en", AppLanguage.normalize("it"));
         assertEquals("en", AppLanguage.normalize("invalid"));
         assertEquals("zh-CN", AppLanguage.normalize("zh-CN"));
         assertEquals("en", AppLanguage.normalize("en"));
         assertEquals("en", AppLanguage.normalize("en-US"));
+    }
+
+    @Test public void tenAdditionalLanguagesCoverAllFieldsAndPreserveFormatArguments() throws Exception {
+        Map<String,String> english=strings("values-en");
+        for(String directory:List.of("values-es","values-fr","values-de","values-pt-rBR","values-ru",
+                "values-ar","values-hi","values-ja","values-ko","values-in")) {
+            Map<String,String> translated=strings(directory);
+            assertEquals(directory,english.keySet(),translated.keySet());
+            for(String key:english.keySet()) {
+                assertFalse(directory+": "+key,translated.get(key).isBlank());
+                assertEquals(directory+": "+key,placeholders(english.get(key)),placeholders(translated.get(key)));
+                assertEquals(directory+": "+key,templatePlaceholders(english.get(key)),templatePlaceholders(translated.get(key)));
+                assertFalse(directory+": "+key,translated.get(key).contains("ZXQ"));
+            }
+            for(String key:List.of("port_help","mtu_help")) {
+                List<String> expected=Pattern.compile("[0-9]+").matcher(english.get(key)).results().map(java.util.regex.MatchResult::group).sorted().toList();
+                List<String> actual=Pattern.compile("[0-9]+").matcher(translated.get(key)).results().map(java.util.regex.MatchResult::group).sorted().toList();
+                assertEquals(directory+": limits changed in "+key,expected,actual);
+            }
+        }
+    }
+
+    @Test public void supportedLanguagesMatchAndroidSystemSelectorAndKeepRegionalAliases() throws Exception {
+        DocumentBuilderFactory factory=DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
+        NodeList locales=factory.newDocumentBuilder().parse(mainPath("res/xml/locales_config.xml").toFile()).getElementsByTagName("locale");
+        java.util.Set<String> tags=new java.util.HashSet<>();
+        for(int i=0;i<locales.getLength();i++)assertTrue(tags.add(((Element)locales.item(i)).getAttribute("android:name")));
+        assertEquals(13,tags.size());
+        assertEquals(tags.stream().map(AppLanguage::normalize).collect(java.util.stream.Collectors.toSet()),AppLanguage.options().stream().map(AppLanguage.Option::tag).collect(java.util.stream.Collectors.toSet()));
+        for(var option:AppLanguage.options())assertEquals(option.tag(),AppLanguage.normalize(option.tag()));
+        assertEquals("pt-BR",AppLanguage.normalize("pt-PT"));
+        assertEquals("es",AppLanguage.normalize("es-MX"));
+        assertEquals("id",AppLanguage.normalize("in-ID"));
     }
 
     @Test public void chineseLocaleScriptAndRegionArePreserved() {
@@ -115,8 +156,10 @@ public final class LocalizationResourcesTest {
         assertEquals("Language", strings("values-en").get("language"));
         String languageSource = new String(Files.readAllBytes(mainPath(
                 "java/dev/lan/atticusvpn/server/ui/LanguageSettingsActivity.java")), StandardCharsets.UTF_8);
-        assertTrue(languageSource.contains("R.string.language_traditional_chinese"));
-        assertTrue(languageSource.contains("AppLanguage.TRADITIONAL_CHINESE"));
+        assertTrue(languageSource.contains("AppLanguage.options()"));
+        assertTrue(AppLanguage.options().stream().anyMatch(option ->
+                option.tag().equals(AppLanguage.TRADITIONAL_CHINESE)
+                        && option.label() == dev.lan.atticusvpn.server.R.string.language_traditional_chinese));
         String localeSource = new String(Files.readAllBytes(mainPath("res/xml/locales_config.xml")),
                 StandardCharsets.UTF_8);
         assertTrue(localeSource.contains("android:name=\"zh-CN\""));
