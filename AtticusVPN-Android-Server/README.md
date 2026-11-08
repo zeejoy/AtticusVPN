@@ -1,6 +1,6 @@
 # AtticusVPN Android Server
 
-自托管的标准 WireGuard 安卓服务端。项目作者与公开署名：**TianzeL**。STABLE 源码版本 0.6.0，最低 Android 7.0（API 24）。本次为 **Source-only** 发布，未提供已验收的正式 0.6.0 APK。
+自托管的标准 WireGuard 安卓服务端。项目作者与公开署名：**TianzeL**。STABLE 版本 0.6.0，最低 Android 7.0（API 24）。[Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) 提供源码和原证书签名的正式 APK；已完成有限范围的真机覆盖升级检查，公网连接和后台运行等完整验收仍待完成。
 
 本仓库只发布现有 Android Server 功能的源码：安卓界面、纯 Java 核心、Go 用户态网络引擎、测试、界面素材及构建工具。
 不含 Windows/Android 客户端源码、Linux 服务端、私人签名、已有 APK/AAR、设备测试数据或未集成的 strongSwan 原生实验目录。
@@ -13,7 +13,9 @@ GitHub 原 0.5.8 是第一个正式版，本次 0.6.0 是第二个正式版开�
 
 0.6.0 复用测试版的新主页、设备页和 IP 信息页；液态玻璃固定取自 **TEST 1.3.0 / e934d48**。VPN 配置迁至设置，增加当前运行日志、13 种语言和锁屏后台运行权限引导。保留正式 0.5.8 的 WireGuard、撤销设备、密钥清理和配置格式；本次不迁入 Atticus Link 或 IKEv2 服务。
 
-原签名由用户保管。本次公开 Release 只提供源码、校验值与第三方许可/对应源码材料，不提供 APK。开发者自行构建的未签名 Release 与独立包名 Debug 均不能冒充正式安装包。签名校验见 [发布渠道](docs/RELEASE-CHANNELS.md)；原证书、真机覆盖升级和数据保持未验证。
+原签名由用户保管。[正式 APK](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/AtticusVPN-Server-v0.6.0.apk) 与原 0.5.8 的签名证书一致，证书 SHA-256 为 `2ff3b123dbaa5350542e1ee3c2cc371dde487038db3553a35d5754126caeab32`。APK SHA-256 为 `074bc9e90bbdf0f4c40f365788b805c623625ff2ff50aef6ac9f3d6888dcc0cd`；非 Debug 包，通过 v2/v3 签名与 16 KiB 对齐校验。Release 同时保留源码、校验值与第三方许可/对应源码材料；源码标签与原源码附件不变。开发者自行构建的未签名 Release 与独立包名 Debug 均不能冒充正式安装包。签名校验见 [发布渠道](docs/RELEASE-CHANNELS.md)。
+
+2026-11-07 在 MI MAX 3（Android 10）上安装原 0.5.8、创建测试 Peer，再保留数据覆盖安装 0.6.0；安装成功、界面可打开，应用 UID、首次安装时间和测试 Peer 的名称、地址、启用状态、可导出状态保留。此检查使用新建测试配置；尚未验证既有生产配置的完整保留、服务器身份、真实 DDNS 设置、WireGuard 握手/转发、服务启停及持续后台运行，不能视为完整无损升级或公网验收。
 
 ## 本次修复与验证
 
@@ -69,7 +71,7 @@ APK 在 `app/build/outputs/apk/debug/app-debug.apk`。调试签名由你自己�
 
 ## 使用
 
-1. 安装自己构建的服务端，确认手机获得健康公网 IPv6；必要时允许路由器向该手机的 UDP 入站。
+1. 安装 Release 中的正式 APK 或自己构建的服务端，确认手机获得健康公网 IPv6；必要时允许路由器向该手机的 UDP 入站。覆盖升级时保留应用数据并核对签名，不要卸载或清除数据。
 2. 连接设置默认 UDP 51820、MTU 1380。已有自定义端口不会自动覆盖。
 3. 设置 → VPN 设置可选择 DDNS 服务商并填写对应字段，说明位于输入框上方。切换服务商只改变表单；需要主动保存才能生效。
 4. 启动服务器，在第二页添加 Peer，进入导出页面生成标准配置或二维码。
