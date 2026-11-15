@@ -2,7 +2,7 @@
 
 Copyright 2026 TianzeL. SPDX-License-Identifier: Apache-2.0.
 
-本公开副本只保留公开别名 TianzeL 和现有技术包名。发布流程排除本机路径、设备标识、私人配置、构建日志、签名及历史提交；所有档案条目与图片元数据需要独立检查。
+本公开副本只保留公开别名 TianzeL 和现有技术包名。源码归档排除本机路径、设备标识、私人配置、构建日志、签名材料与 Git 元数据；公开仓库保留原有 Git 历史。所有档案条目与图片元数据需要独立检查。
 必要的上游公开版权、商标与许可证联系信息予以保留，这些不是项目作者的个人信息。
 
 ## 源码中的测试数据
@@ -37,5 +37,5 @@ Copyright 2026 TianzeL. SPDX-License-Identifier: Apache-2.0.
 `tools/verify-public.py` 逐条检查源 ZIP、嵌套 Wrapper JAR 和 PNG 结构，不打印匹配到的凭据值。
 它禁止源码包包含 AAR/APK、缓存、签名、日志等；构建后不能把整个工作目录重新压缩发布，应重新按发布白名单整理。
 普通扫描无法数学证明任意未知内容没有秘密；实际发布还需人工核对、证书解析、来源审查和最终档案检查。
-发布核验记录见 [VERIFICATION.md](VERIFICATION.md)。后续添加文件必须重新审查。
+历史发布核验记录见 [VERIFICATION.md](VERIFICATION.md) 与 [2026-11-07 源码验证](docs/SOURCE-RELEASE-0.6.0.md)；当前正式 APK、公开证书信息及有限真机升级范围见 [v.0.6.0 Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) 和[发布渠道](docs/RELEASE-CHANNELS.md)。后续添加文件必须重新审查。
 

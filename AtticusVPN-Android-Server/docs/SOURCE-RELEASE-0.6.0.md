@@ -1,5 +1,7 @@
 # STABLE 0.6.0 source release validation
 
+> Historical record: this document describes the 2026-11-07 source-only publication stage. The official signed APK was subsequently added to the same Release. For current downloads, signing information and the limited device-upgrade test scope, see the [v.0.6.0 Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) and [release channels](RELEASE-CHANNELS.md). The original dates, counts, hashes, failures and validation limits below are retained; this documentation update did not rerun those checks.
+
 Validation date: 2026-11-07. This record describes checks executed for this source publication. The dated 2026-11-05 repair report remains historical evidence and is not counted as a rerun.
 
 ## Source identity and integration

@@ -1,5 +1,7 @@
 # AtticusVPN Android Server 0.6.0 全面修复与回归验证报告
 
+> 历史记录：本文记录 2026-11-05 的私有修复验证阶段；“保持私有”“未签名”“未创建公开下载入口”等均为当时状态。最新正式 APK 发布状态、签名信息和有限真机升级测试范围，以 [GitHub v.0.6.0 Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) 和[发布渠道](RELEASE-CHANNELS.md)为准。原测试数字、失败记录、历史日期和证据边界保留，本次文档维护未重跑这些测试。
+
 TianzeL · STABLE 0.6.0 发布准备 · 2026-11-05 · 保持私有
 
 ## 1. 审查对象、工作区及证据边界

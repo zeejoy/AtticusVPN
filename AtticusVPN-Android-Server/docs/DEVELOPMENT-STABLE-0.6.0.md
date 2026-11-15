@@ -1,5 +1,7 @@
 # STABLE 0.6.0 开发日志 · TianzeL
 
+> 历史记录：本文记录 2026-11-02/03 的开发、P1 修订及 11-05 的私有修复阶段。“原签名未知”“所有产物保持私有”等描述的是当时情况。最新正式 APK 发布状态、签名信息和有限真机升级测试范围，以 [GitHub v.0.6.0 Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) 和[发布渠道](RELEASE-CHANNELS.md)为准。下文日期、来源、测试记录和未验证项保留原文。
+
 ## 2026-11-03 · P1 修订（仍为 STABLE 0.6.0）
 
 本次修订编号 P1-20261103，按用户要求覆盖同版本交付文件；以新的 SHA256SUMS 核对文件，不将它误认成先前未修复的构建。配置 schema、WireGuard 认证/导出格式、包名和 versionCode 均保持不变。

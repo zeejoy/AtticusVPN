@@ -1,5 +1,7 @@
 # 正式版 0.6.0 变更 · TianzeL
 
+> 历史记录：下文按 2026-11-03 的 P1 修订、原开发阶段和 11-05 的完整修复记录展开；“仍需后续处理”“原签名待核验”等仅指对应阶段。最新正式 APK 发布状态、签名信息和有限真机升级测试范围，以 [GitHub v.0.6.0 Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) 和[发布渠道](RELEASE-CHANNELS.md)为准。原修复过程、日期和验证限制保留。
+
 ## 2026-11-03 · P1 修订（仍为 STABLE 0.6.0）
 
 本次修订编号 P1-20261103，按用户要求覆盖同版本交付文件；以新的 SHA256SUMS 核对文件，不将它误认成先前未修复的构建。配置 schema、WireGuard 认证/导出格式、包名和 versionCode 均保持不变。

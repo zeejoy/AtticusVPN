@@ -2,9 +2,17 @@
 
 **Turn your Android device into a self-hosted WireGuard VPN server.**
 
-AtticusVPN Android Server 0.6.0 STABLE is available as source and an official production-signed APK. The APK uses the original 0.5.8 signing certificate. An MI MAX 3 Android 10 in-place upgrade retained a test Peer and application identity; server identity continuity, actual DDNS settings, WireGuard handshake/forwarding, service start/stop and background-operation acceptance remain unverified. See the release notes for the exact test scope.
+AtticusVPN Android Server 0.6.0 STABLE is available as source and an official production-signed APK using the original 0.5.8 signing certificate.
 
-The historical [0.5.8 release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.5.8) remains available with its documented reliability issues. Do not treat a locally built Debug APK or unsigned Release APK as an official upgrade.
+## Download AtticusVPN
+
+**Latest stable version: v0.6.0**
+
+[![Download APK](https://img.shields.io/badge/Download-APK-green?logo=android)](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/AtticusVPN-Server-v0.6.0.apk)
+
+[View Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) · [Source Code](https://github.com/zeejoy/AtticusVPN/tree/v.0.6.0) · [Source ZIP](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/AtticusVPN-Android-Server-STABLE-0.6.0-source.zip) · [APK SHA-256](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/SHA256SUMS-APK-STABLE-0.6.0.txt)
+
+Requires **Android 7.0+ (API 24+)**. Remote access also requires public IPv6 and permitted inbound UDP; see the requirements and verification limits below.
 
 ## Features and requirements
 
@@ -33,6 +41,12 @@ See the [Android Server README](./AtticusVPN-Android-Server/README.md), [native 
 ## Downloads and verification
 
 The [v.0.6.0 release page](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) provides the [official signed APK](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/AtticusVPN-Server-v0.6.0.apk), source archives, checksums, third-party corresponding source, and build/license instructions. APK SHA-256: `074bc9e90bbdf0f4c40f365788b805c623625ff2ff50aef6ac9f3d6888dcc0cd`. Certificate SHA-256: `2ff3b123dbaa5350542e1ee3c2cc371dde487038db3553a35d5754126caeab32` (same as 0.5.8). The APK is not debuggable and verifies with APK Signature Schemes v2/v3. The source tag and its original archives remain unchanged. The dated [source release validation](./AtticusVPN-Android-Server/docs/SOURCE-RELEASE-0.6.0.md) records the source-only publication stage; the Release notes record the later signing and limited device upgrade test. Earlier dated audit reports are historical evidence, not a claim that those checks ran again.
+
+An MI MAX 3 Android 10 in-place upgrade retained the application UID, first-install timestamp and a newly created test Peer's name, addresses, enabled state and export availability. Existing production configuration retention, server identity continuity, actual DDNS settings, WireGuard handshake/Internet forwarding, service start/stop, sustained locked-screen operation, other Android devices and public IPv6/carrier compatibility remain unverified. See the Release notes for the exact test scope. Do not treat a locally built Debug APK or unsigned Release APK as an official upgrade.
+
+## Historical version 0.5.8
+
+The [0.5.8 release and its APK](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.5.8) remain available for historical reference. It has the disclosed **F01–F04** reliability issues affecting state recovery, TCP resource limits, TCP half-close handling and DNS response matching. It is not recommended for critical uses or long-term operation.
 
 ## Security and privacy
 

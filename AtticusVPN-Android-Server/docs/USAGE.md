@@ -2,7 +2,7 @@
 
 新版底部为主页、设备、IP 信息；配置移至设置 → VPN 设置。主页显示状态和流量，启停仍只控制标准 WireGuard。设置还提供当前运行日志、13 种语言和锁屏后台运行引导。
 
-安装前先阅读 RELEASE-CHANNELS.md：STABLE-UNSIGNED 必须使用原密钥签名；TEST 调试包仅供独立测试。不要先卸载原正式应用。详细日志隐私与保留规则见 LOGGING.md。
+安装前先阅读[发布渠道](RELEASE-CHANNELS.md)：[v.0.6.0 Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) 已提供原证书签名的[正式 APK](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/AtticusVPN-Server-v0.6.0.apk)，要求 Android 7.0+（API 24+）。先核对[APK SHA-256](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/SHA256SUMS-APK-STABLE-0.6.0.txt)及证书。仅自行构建的 UNSIGNED 包需要另行本地签名；TEST 调试包仅供独立测试。覆盖升级不要先卸载原正式应用或清空数据。详细日志隐私与保留规则见 [LOGGING.md](LOGGING.md)。
 
 以下原有 WireGuard 配置、导出和安全规则继续适用；旧文档中的第三页连接设置入口改为“设置 → VPN 设置”。
 
@@ -18,8 +18,8 @@ Wi-Fi 下检查路由器 IPv6 防火墙允许目标手机 UDP 51820，或你配�
 
 ## 三页
 
-首页是运行信息、启停和重测；第二页是 Peer 管理；第三页是连接及 DDNS。切页不保存表单。
-右上角设置可选择三种语言和外观。默认英语、跟随系统；语言入口按当前语言显示 Language/语言、Language/語言 或 Language。
+首页是运行信息、启停和重测；第二页是 Peer 管理；第三页是 IP 信息。连接及 DDNS 表单位于“设置 → VPN 设置”；退出或切换页面不代表保存配置。
+设置可选择 13 种语言及外观。默认英语、跟随系统；语言入口按当前语言显示。
 
 ## 连接设置
 
@@ -65,4 +65,6 @@ DDNS 与服务端运行生命周期一起工作：地址变化去抖后更新，
 
 TCP 默认全局 512、每设备 64 条；达到上限时新的连接会被拒绝，已有连接继续运行。15 分钟无流量回收，半关闭后 2 分钟无流量回收，持续传输会续期。设置中的日志记录固定网关错误类别，正常关闭不作为连接故障。日志默认遮盖仅是显示策略，完整 IP 仍在本次进程内存中；见 LOGGING.md 与 PRIVACY.md。
 
-UNSIGNED Release 必须用旧正式版相同的本地签名密钥签名再覆盖安装，不能用 Debug 包代替，不要先卸载或清空数据。该交付未进行真实手机验收；详见完整修复报告。
+公开正式 APK 已使用与 0.5.8 相同的证书签名。仅本地 UNSIGNED Release 需要使用原签名密钥另行签名，不能用 Debug 包代替；覆盖升级不要先卸载或清空数据。已完成 MI MAX 3 / Android 10 上安装原 0.5.8、创建测试 Peer 后的有限覆盖升级检查，保留了应用 UID、首次安装时间和测试 Peer 的部分信息。
+
+这不代表已有生产配置全面保留或功能全面验收。真实服务器身份、DDNS 设置保留、WireGuard 握手与 TCP/UDP 互联网转发、服务启停、长时间锁屏后台、其他 Android 设备、公网 IPv6 与运营商网络仍待验证；准确范围见[发布渠道](RELEASE-CHANNELS.md)和 Release。11 月 5 日的[完整修复报告](REPAIR-AND-VALIDATION-STABLE-0.6.0.md)记录的是历史主机验证阶段。
