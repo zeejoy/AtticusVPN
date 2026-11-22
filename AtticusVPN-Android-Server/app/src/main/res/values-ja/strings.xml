@@ -25,9 +25,6 @@
     <string name="start_server">サーバーを開始</string>
     <string name="stop">停止</string>
     <string name="check_network">ネットワークを再確認</string>
-    <string name="device_section">デバイス機能・試験的</string>
-    <string name="device_capabilities">デバイス機能</string>
-    <string name="reading_device">デバイス情報を読み取り中（Root 権限は自動要求しません）…</string>
     <string name="check_root">Root を再確認</string>
     <string name="request_root">Root 権限を再要求</string>
     <string name="root_dialog_title">既存の Root 権限を要求して読み取り専用チェック</string>
@@ -77,7 +74,6 @@
     <string name="save_settings">設定を保存して適用</string>
     <string name="peer_section">Peer デバイス</string>
     <string name="add_peer">Peer を追加</string>
-    <string name="seal_help">出力後に Peer を封印すると、この端末の出力可能な秘密鍵を削除できます。既存デバイスは引き続き接続できます。</string>
     <string name="footer">TianzeL · AtticusVPN %1$s</string>
     <string name="no_peers">Peer はまだありません。</string>
     <string name="sealed">封印済み</string>
@@ -204,9 +200,6 @@
     <string name="server_running">AtticusVPN サーバー稼働中</string>
     <string name="server_waiting_network">使用可能なパブリック IPv6 ネットワークを待機しています</string>
     <string name="dns_server_enabled">クライアントはサーバーの組み込み DNS ( 10.77.0.1 ) を使用します。</string>
-    <string name="device_check_busy">確認中… 電話機で Root 許可ダイアログを探します。  WireGuard は独立して実行され、影響を受けません。</string>
-    <string name="device_check_failed">デバイスのチェックが完了しませんでした。手動で再試行してください。  IKEv2 はロックされたままです。  WireGuard は影響を受けません。</string>
-    <string name="device_check_result">最終チェック (許可またはネットワークの変更後に再度チェック)\nRoot : %1$s\nRoot プロバイダー: %2$s\nアンドロイド: %3$s\nカーネル: %4$s\nABI: %5$s\nSELinux : %6$s\nIPv6 : %7$s\nXFRM 統計: %8$s\nXFRM 状態: %9$s\nXFRM ポリシー: %10$s\nポート: %11$s\nIPv4 転送: %12$s\nIPv6 転送: %13$s\nIKEv2 : %14$s</string>
     <string name="wg_export_title">WireGuard 設定</string>
     <string name="wg_peer_details">クライアント: %1$s\n割り当てられたアドレス: %2$s</string>
     <string name="wg_export_private_warning">設定と QR コードにはクライアントの秘密キーが含まれています。信頼できるデバイスとのみ共有してください。</string>

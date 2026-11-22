@@ -97,9 +97,9 @@ public final class SettingsLocalizationFlowTest {
         var controller=Robolectric.buildActivity(SettingsActivity.class).setup().visible();
         try {
             var activity=controller.get();View root=activity.findViewById(android.R.id.content);layout(root);
-            var buttons=views(root,Button.class);assertEquals(6,buttons.size());
+            var buttons=views(root,Button.class);assertEquals(5,buttons.size());
             Class<?>[] destinations={VpnSettingsActivity.class,BackgroundAccessActivity.class,LanguageSettingsActivity.class,
-                    AppearanceSettingsActivity.class,DeviceCapabilitiesActivity.class,RuntimeLogActivity.class};
+                    AppearanceSettingsActivity.class,RuntimeLogActivity.class};
             for(int i=0;i<buttons.size();i++) {
                 Button button=buttons.get(i);assertNotNull(button.getCompoundDrawablesRelative()[0]);
                 assertEquals(22,button.getCompoundDrawablesRelative()[0].getBounds().width());

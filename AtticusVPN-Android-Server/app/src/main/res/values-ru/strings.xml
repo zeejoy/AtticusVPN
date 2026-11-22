@@ -25,9 +25,6 @@
     <string name="start_server">Запустить сервер</string>
     <string name="stop">Остановить</string>
     <string name="check_network">Проверить сеть снова</string>
-    <string name="device_section">Возможности устройства · Экспериментально</string>
-    <string name="device_capabilities">Возможности устройства</string>
-    <string name="reading_device">Чтение сведений об устройстве (Root не запрашивается автоматически)…</string>
     <string name="check_root">Проверить Root снова</string>
     <string name="request_root">Снова запросить Root</string>
     <string name="root_dialog_title">Запросить имеющийся Root и проверить без изменений</string>
@@ -77,7 +74,6 @@
     <string name="save_settings">Сохранить и применить</string>
     <string name="peer_section">Устройства Peer</string>
     <string name="add_peer">Добавить Peer</string>
-    <string name="seal_help">После экспорта можно запечатать Peer и убрать его экспортируемый закрытый ключ с телефона. Существующие устройства продолжат подключаться.</string>
     <string name="footer">TianzeL · AtticusVPN %1$s</string>
     <string name="no_peers">Устройства ещё не добавлены.</string>
     <string name="sealed">Запечатан</string>
@@ -204,9 +200,6 @@
     <string name="server_running">Сервер AtticusVPN работает</string>
     <string name="server_waiting_network">Ожидание пригодной для использования общедоступной сети IPv6.</string>
     <string name="dns_server_enabled">Клиенты используют встроенный DNS сервера ( 10.77.0.1 ).</string>
-    <string name="device_check_busy">Проверка… Найдите на телефоне диалоговое окно разрешений Root.  WireGuard работает независимо и не подвержен влиянию.</string>
-    <string name="device_check_failed">Проверка устройства не завершена. Повторите попытку вручную.  IKEv2 остается заблокированным;  WireGuard не затрагивается.</string>
-    <string name="device_check_result">Последняя проверка (проверка еще раз после разрешения или изменения сети)\nRoot : %1$s\nПоставщик Root: %2$s\nАндроид: %3$s\nЯдро: %4$s\nABI: %5$s\nSELinux : %6$s\nIPv6 : %7$s\nСтатистика XFRM: %8$s\nСостояние XFRM: %9$s\nПолитика XFRM: %10$s\nПорты: %11$s\nIPv4 переадресация: %12$s\nIPv6 переадресация: %13$s\nIKEv2 : %14$s</string>
     <string name="wg_export_title">Конфигурация WireGuard</string>
     <string name="wg_peer_details">Клиент: %1$s\nПрисвоенные адреса: %2$s.</string>
     <string name="wg_export_private_warning">Конфигурация и QR-код содержат закрытый ключ клиента. Делитесь только с теми устройствами, которым вы доверяете.</string>

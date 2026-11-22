@@ -14,7 +14,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import dev.lan.atticusvpn.server.storage.EncryptedStateRepository;
-import dev.lan.atticusvpn.server.runtime.DeviceCheckController;
 import dev.lan.atticusvpn.server.storage.SecretCleanupScheduler;
 import java.util.concurrent.ScheduledExecutorService;
 import android.util.Log;
@@ -42,7 +41,6 @@ public final class AtticusServerApplication extends Application {
 
     private EncryptedStateRepository repository;
     private volatile boolean initializationFailed;
-    private DeviceCheckController deviceChecks;
     private final ScheduledExecutorService cleanupExecutor = Executors.newSingleThreadScheduledExecutor(
             runnable -> { Thread thread = new Thread(runnable, "AtticusVPN-KeyCleanup");
                 thread.setDaemon(true); return thread; });
@@ -52,8 +50,6 @@ public final class AtticusServerApplication extends Application {
     public void onCreate() {
         super.onCreate();
         dev.lan.atticusvpn.server.logging.RuntimeLogCollector.current().start(this);
-        // 构造不触发 su；Root 队列不与 WireGuard 或仓库初始化共用。
-        deviceChecks = DeviceCheckController.create();
         repository = new EncryptedStateRepository(this);
         keyCleanup = new SecretCleanupScheduler(repository::cleanupRevokedKeys,
                 (action, delay) -> cleanupExecutor.schedule(action, delay, TimeUnit.SECONDS),
@@ -75,7 +71,6 @@ public final class AtticusServerApplication extends Application {
         });
     }
 
-    public DeviceCheckController deviceChecks() { return deviceChecks; }
     public void requestKeyCleanup() { keyCleanup.request(); }
 
     /**

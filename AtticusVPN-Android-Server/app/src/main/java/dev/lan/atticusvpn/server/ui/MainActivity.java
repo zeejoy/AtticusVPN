@@ -163,7 +163,9 @@ public class MainActivity extends LocalizedActivity implements RuntimeStatusStor
         refreshState(false);
         if(homeInfo!=null)homeInfo.start(new HomeInfoCollector.Listener() {
             @Override public void onSnapshot(HomeInfoCollector.Snapshot snapshot) {
-                // 打字器按当前轮的代号读取快照；检测结果不回写 Service，也不触发新一轮检测。
+                dashboard.showNetworkCheck(snapshot.probeReady
+                        ? networkCheckMessage(snapshot)
+                        : UiMessages.networkCheck(MainActivity.this, NetworkCheckResult.CHECKING));
             }
             @Override public void onInformationChanged() { requestTerminalRefresh(false, null); }
         });
@@ -391,10 +393,6 @@ public class MainActivity extends LocalizedActivity implements RuntimeStatusStor
         peerHeader.addView(addPeer);
         peersPage.addView(peerHeader);
 
-        final TextView peerHint = text(
-                getString(R.string.seal_help), 13, false);
-        peerHint.setTextColor(getColor(R.color.atticus_secondary));
-        peersPage.addView(peerHint, marginBottom(10));
         peersContainer = vertical();
         peersPage.addView(peersContainer, matchWrap());
 
@@ -881,7 +879,7 @@ public class MainActivity extends LocalizedActivity implements RuntimeStatusStor
 
     private void updateDashboard() {
         if(dashboard==null)return;
-        long rx=0,tx=0;int count=0;boolean running,failed;String status,note;
+        long rx=0,tx=0;int count=0;boolean running,failed;String status;
             running=latestRuntime.phase()==RuntimeStatus.Phase.RUNNING;failed=latestRuntime.phase()==RuntimeStatus.Phase.ERROR;
             long now=System.currentTimeMillis()/1000L;
             for(var peer:latestRuntime.peers()) {
@@ -893,8 +891,7 @@ public class MainActivity extends LocalizedActivity implements RuntimeStatusStor
                 case STOPPING -> R.string.home_stopping;case WAITING_NETWORK -> R.string.home_waiting;
                 case ERROR -> R.string.home_failed;default -> R.string.home_stopped;
             });
-            note=failed?runtimePhaseText(latestRuntime):getString(R.string.home_wg_stats_note);
-        dashboard.show("WireGuard · IPv6",status,running,failed,getString(R.string.home_recent_devices),count,formatBytes(rx),formatBytes(tx),note);
+        dashboard.show("WireGuard · IPv6",status,running,failed,getString(R.string.home_recent_devices),count,formatBytes(rx),formatBytes(tx));
     }
     private static long addCounter(long total,long value){return value<0?total:total>Long.MAX_VALUE-value?Long.MAX_VALUE:total+value;}
     private void updateServerControls() {
@@ -1008,11 +1005,11 @@ public class MainActivity extends LocalizedActivity implements RuntimeStatusStor
         if (data == null) return null;
         if (field == 7) {
             if (!data.probeReady) return null;
+            final String message = networkCheckMessage(data);
             if (data.networkCheck.isConnectivityConfirmed()) {
-                return TerminalStatusAnimator.Value.text(UiMessages.networkCheck(this, data.networkCheck));
+                return TerminalStatusAnimator.Value.text(message);
             }
-            return TerminalStatusAnimator.Value.error("VPN".equals(data.networkType)
-                    ? getString(R.string.terminal_other_vpn) : terminalNetworkError(data.networkCheck));
+            return TerminalStatusAnimator.Value.error(message);
         }
         if (field != 0 && field != 3) {
             if (!data.settingsReady) return null;
@@ -1046,8 +1043,12 @@ public class MainActivity extends LocalizedActivity implements RuntimeStatusStor
         return TerminalStatusAnimator.Value.text(value);
     }
 
-    private String terminalNetworkError(final NetworkCheckResult result) {
-        switch (result) {
+    private String networkCheckMessage(final HomeInfoCollector.Snapshot data) {
+        if (data.networkCheck.isConnectivityConfirmed()) {
+            return UiMessages.networkCheck(this, data.networkCheck);
+        }
+        if ("VPN".equals(data.networkType)) return getString(R.string.terminal_other_vpn);
+        switch (data.networkCheck) {
             case HTTPS_FAILED: return getString(R.string.terminal_https_failed);
             case TIMEOUT: return getString(R.string.terminal_network_timeout);
             case CANCELLED: return getString(R.string.check_cancelled);

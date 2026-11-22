@@ -24,9 +24,6 @@
     <string name="start_server">Start server</string>
     <string name="stop">Stop</string>
     <string name="check_network">Check network again</string>
-    <string name="device_section">Device capabilities · Experimental</string>
-    <string name="device_capabilities">Device capabilities</string>
-    <string name="reading_device">Reading basic device information (Root will not be requested automatically)…</string>
     <string name="check_root">Check Root again</string>
     <string name="request_root">Request Root again</string>
     <string name="root_dialog_title">Request existing Root access and run read-only checks</string>
@@ -76,7 +73,6 @@
     <string name="save_settings">Save and apply settings</string>
     <string name="peer_section">Peer devices</string>
     <string name="add_peer">Add peer</string>
-    <string name="seal_help">After export, you can seal a peer to remove its exportable private key from this phone. Existing devices can still connect.</string>
     <string name="footer">TianzeL · AtticusVPN %1$s</string>
     <string name="no_peers">No peers have been added.</string>
     <string name="sealed">Sealed</string>
@@ -203,9 +199,6 @@
     <string name="server_running">AtticusVPN Server is running</string>
     <string name="server_waiting_network">Waiting for a usable public IPv6 network</string>
     <string name="dns_server_enabled">Clients use the server’s built-in DNS (10.77.0.1)</string>
-    <string name="device_check_busy">Checking… Look for a Root permission dialog on the phone. WireGuard runs independently and is unaffected.</string>
-    <string name="device_check_failed">Device checks did not complete. Retry manually. IKEv2 remains locked; WireGuard is unaffected.</string>
-    <string name="device_check_result">Last check (check again after permission or network changes)\nRoot: %1$s\nRoot provider: %2$s\nAndroid: %3$s\nKernel: %4$s\nABI: %5$s\nSELinux: %6$s\nIPv6: %7$s\nXFRM statistics: %8$s\nXFRM state: %9$s\nXFRM policy: %10$s\nPorts: %11$s\nIPv4 forwarding: %12$s\nIPv6 forwarding: %13$s\nIKEv2: %14$s</string>
     <string name="wg_export_title">WireGuard configuration</string>
     <string name="wg_peer_details">Client: %1$s\nAssigned addresses: %2$s</string>
     <string name="wg_export_private_warning">The configuration and QR code contain the client private key. Share only with devices you trust.</string>

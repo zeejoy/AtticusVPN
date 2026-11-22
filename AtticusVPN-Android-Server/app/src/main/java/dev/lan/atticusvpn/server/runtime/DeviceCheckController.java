@@ -50,7 +50,6 @@ public final class DeviceCheckController {
                 root.requestAuthorization();
                 return checker.check();
             }
-            root.discoverWithoutPrompt();
             return checker.checkWithoutRootCommands();
         }, Executors.newSingleThreadExecutor(runnable -> {
             final Thread thread = new Thread(runnable, "AtticusVPN-DeviceCheck");

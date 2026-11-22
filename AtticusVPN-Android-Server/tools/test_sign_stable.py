@@ -9,13 +9,13 @@ spec=importlib.util.spec_from_file_location('sign_stable',Path(__file__).with_na
 signing=importlib.util.module_from_spec(spec);spec.loader.exec_module(signing)
 class UpgradePolicyTest(unittest.TestCase):
  def test_stable_upgrade_allowed(self):
-  signing.verify_upgrade(('dev.lan.atticusvpn.server',19,'0.5.8'),('dev.lan.atticusvpn.server',20,'0.6.0-stable'))
+  signing.verify_upgrade(('dev.lan.atticusvpn.server',20,'0.6.0-stable'),('dev.lan.atticusvpn.server',21,'0.6.1'))
  def test_wrong_channels_and_downgrades_refused(self):
-  old=('dev.lan.atticusvpn.server',19,'0.5.8')
-  for new in [('dev.lan.atticusvpn.server.debug',20,'0.6.0-stable'),('dev.lan.atticusvpn.server',19,'0.6.0-stable'),('dev.lan.atticusvpn.server',20,'0.6.0-test-debug')]:
+  old=('dev.lan.atticusvpn.server',20,'0.6.0-stable')
+  for new in [('dev.lan.atticusvpn.server.debug',21,'0.6.1'),('dev.lan.atticusvpn.server',20,'0.6.1'),('dev.lan.atticusvpn.server',21,'0.6.1-test-debug'),('dev.lan.atticusvpn.server',21,'0.6.1-stable')]:
    with self.subTest(new=new),self.assertRaises(ValueError):signing.verify_upgrade(old,new)
  def test_test_apk_never_serves_as_upgrade_baseline(self):
-  with self.assertRaises(ValueError):signing.verify_upgrade(('dev.lan.atticusvpn.server.ipsectest',26,'1.3.1'),('dev.lan.atticusvpn.server',27,'0.6.0-stable'))
+  with self.assertRaises(ValueError):signing.verify_upgrade(('dev.lan.atticusvpn.server.ipsectest',19,'1.3.1'),('dev.lan.atticusvpn.server',21,'0.6.1'))
  def test_unsigned_or_multiple_signers_refused(self):
   for output in ['', 'Signer #1 certificate SHA-256 digest: aa\nSigner #2 certificate SHA-256 digest: bb']:
    with patch.object(signing,'run',return_value=output),self.assertRaises(ValueError):signing.signer('tool','apk')

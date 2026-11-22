@@ -17,8 +17,8 @@ android {
         applicationId = "dev.lan.atticusvpn.server"
         minSdk = 24
         targetSdk = 36
-        versionCode = 20
-        versionName = "0.6.0"
+        versionCode = 21
+        versionName = "0.6.1"
         testInstrumentationRunner = "dev.lan.atticusvpn.server.RevocationDeviceRunner"
     }
 
@@ -49,7 +49,6 @@ android {
             versionNameSuffix = "-test-debug"
         }
         release {
-            versionNameSuffix = "-stable"
             resValue("string", "channel_app_name", "AtticusVPN · Stable")
             isMinifyEnabled = true
             isShrinkResources = true
