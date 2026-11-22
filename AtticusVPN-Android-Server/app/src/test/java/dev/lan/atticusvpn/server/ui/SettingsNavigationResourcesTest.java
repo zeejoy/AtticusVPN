@@ -63,7 +63,7 @@ public final class SettingsNavigationResourcesTest {
 
     @Test public void settingsAndAllSecondLevelPagesUseTheSameHeader() throws Exception {
         for (String name : new String[] { "SettingsActivity", "LanguageSettingsActivity",
-                "AppearanceSettingsActivity", "DeviceCapabilitiesActivity" }) {
+                "AppearanceSettingsActivity", "BackgroundAccessActivity", "RuntimeLogActivity" }) {
             String page = source(name);
             assertTrue(name, page.contains("extends SettingsPageActivity"));
             assertTrue(name, page.contains("createPage("));

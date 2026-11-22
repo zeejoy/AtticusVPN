@@ -40,8 +40,8 @@ def signer(apksigner, apk):
 def verify_upgrade(previous, current):
     if previous[0] != 'dev.lan.atticusvpn.server' or current[0] != previous[0]:
         raise ValueError('Package mismatch: never replace the installed stable app with a test package')
-    if previous[1] >= current[1] or current[2] != '0.6.0-stable':
-        raise ValueError('Expected stable 0.6.0 with an increasing version code')
+    if previous[1] >= current[1] or current[2] != '0.6.1':
+        raise ValueError('Expected stable 0.6.1 with an increasing version code')
 
 
 def publish_exclusive(source, target):
@@ -67,7 +67,7 @@ def main():
     parser.add_argument('--keystore', type=Path, required=True)
     parser.add_argument('--alias', required=True)
     parser.add_argument('--build-tools', type=Path, required=True, help='Android SDK build-tools/36.0.0')
-    parser.add_argument('--out', type=Path, default=Path('AtticusVPN-Android-Server-STABLE-0.6.0.apk'))
+    parser.add_argument('--out', type=Path, default=Path('AtticusVPN-Server-v0.6.1.apk'))
     args = parser.parse_args()
     if args.out.exists() or args.out.is_symlink():
         raise ValueError('Output already exists; choose another path to preserve it')

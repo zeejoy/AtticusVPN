@@ -9,10 +9,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import dev.lan.atticusvpn.server.R;
+import dev.lan.atticusvpn.server.runtime.NetworkCheckResult;
 
 /** Read-only home summary. Receives public counters; never owns keys or service commands. */
 final class ServerDashboardView extends LinearLayout {
-    private final TextView protocol,status,deviceLabel,devices,receive,transmit,detail;
+    private final TextView protocol,status,deviceLabel,devices,receive,transmit;
+    private final TextView networkCheck;
     private final View dot;
     private int dotColor=Integer.MIN_VALUE;
     ServerDashboardView(Context context) {
@@ -27,16 +29,20 @@ final class ServerDashboardView extends LinearLayout {
         deviceRow.addView(deviceLabel,new LayoutParams(0,-2,1));deviceRow.addView(devices);deviceRow.setMinimumHeight(dp(50));addView(deviceRow,new LayoutParams(-1,-2));divider();
         LinearLayout traffic=row();receive=label(14,false);transmit=label(14,false);transmit.setGravity(Gravity.END);
         traffic.addView(receive,new LayoutParams(0,-2,1));traffic.addView(transmit,new LayoutParams(0,-2,1));traffic.setMinimumHeight(dp(50));addView(traffic,new LayoutParams(-1,-2));
-        detail=label(12,false);detail.setTextColor(context.getColor(R.color.atticus_secondary));addView(detail,new LayoutParams(-1,-2));
+        networkCheck = label(12, false);
+        networkCheck.setTextColor(context.getColor(R.color.atticus_secondary));
+        networkCheck.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
+        showNetworkCheck(UiMessages.networkCheck(context, NetworkCheckResult.CHECKING));
+        addView(networkCheck, new LayoutParams(-1, -2));
     }
-    void show(String name,String phase,boolean running,boolean failed,String countLabel,int count,String rx,String tx,String note) {
+    void show(String name,String phase,boolean running,boolean failed,String countLabel,int count,String rx,String tx) {
         update(protocol,name);update(status,phase);
         int color=getContext().getColor(failed?R.color.home_error:running?R.color.home_running:R.color.atticus_secondary);
         if(dotColor!=color){dotColor=color;status.setTextColor(color);GradientDrawable marker=new GradientDrawable();marker.setShape(GradientDrawable.OVAL);marker.setColor(color);dot.setBackground(marker);}
         update(deviceLabel,countLabel);update(devices,Integer.toString(Math.max(0,count)));
         update(receive,getContext().getString(R.string.home_receive,rx));update(transmit,getContext().getString(R.string.home_transmit,tx));
-        update(detail,note);detail.setVisibility(note.isEmpty()?GONE:VISIBLE);
     }
+    void showNetworkCheck(String message) { update(networkCheck, message); }
     private static void update(TextView target,String value){if(!android.text.TextUtils.equals(target.getText(),value))target.setText(value);}
     private LinearLayout row(){LinearLayout value=new LinearLayout(getContext());value.setOrientation(HORIZONTAL);value.setGravity(Gravity.CENTER_VERTICAL);return value;}
     private TextView label(int sp,boolean bold){TextView value=new TextView(getContext());value.setTextSize(sp);value.setTextColor(getContext().getColor(R.color.black));if(bold)value.setTypeface(Typeface.DEFAULT,Typeface.BOLD);return value;}

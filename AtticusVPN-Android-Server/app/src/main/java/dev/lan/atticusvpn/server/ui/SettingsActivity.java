@@ -22,8 +22,6 @@ public final class SettingsActivity extends SettingsPageActivity {
                 startActivity(new Intent(this, LanguageSettingsActivity.class)));
         option(content, R.string.appearance, R.drawable.ic_settings_appearance).setOnClickListener(view ->
                 startActivity(new Intent(this, AppearanceSettingsActivity.class)));
-        option(content, R.string.device_capabilities, R.drawable.ic_settings_device).setOnClickListener(view ->
-                startActivity(new Intent(this, DeviceCapabilitiesActivity.class)));
         option(content, R.string.runtime_log_title, R.drawable.ic_settings_log).setOnClickListener(view ->
                 startActivity(new Intent(this, RuntimeLogActivity.class)));
     }

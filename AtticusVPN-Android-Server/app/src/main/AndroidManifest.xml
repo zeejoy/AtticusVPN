@@ -50,7 +50,6 @@
         <activity android:name=".ui.SettingsActivity" android:exported="false" />
         <activity android:name=".ui.LanguageSettingsActivity" android:exported="false" />
         <activity android:name=".ui.AppearanceSettingsActivity" android:exported="false" />
-        <activity android:name=".ui.DeviceCapabilitiesActivity" android:exported="false" />
         <activity android:name=".ui.PeerExportActivity" android:exported="false" />
 
         <!-- 服务不导出，外部应用不能伪造 start/stop/peer 操作。 -->
