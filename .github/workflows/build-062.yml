@@ -1,0 +1,44 @@
+name: Build Android 0.6.2
+on:
+  push:
+    branches: [build/android-0.6.2]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: AtticusVPN-Android-Server
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.3'
+          cache: false
+      - name: Install Android build inputs
+        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'ndk;29.0.14206865'
+      - name: Build native engine
+        shell: pwsh
+        run: ./native-engine/build-aar.ps1 -AndroidNdk (Join-Path $env:ANDROID_HOME 'ndk/29.0.14206865')
+      - name: Build release APK and check its manifest
+        run: |
+          sh gradlew --no-daemon :app:assembleRelease
+          apk=app/build/outputs/apk/release/app-release-unsigned.apk
+          tools="$ANDROID_HOME/build-tools/36.0.0"
+          "$tools/aapt" dump badging "$apk" > "$RUNNER_TEMP/badging.txt"
+          grep "^package: name='dev.lan.atticusvpn.server' versionCode='22' versionName='0.6.2'" "$RUNNER_TEMP/badging.txt"
+          grep "^application-label:'AtticusVPN'" "$RUNNER_TEMP/badging.txt"
+          cp "$apk" "$GITHUB_WORKSPACE/AtticusVPN-Server-v0.6.2-unsigned.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AtticusVPN-Server-v0.6.2-unsigned
+          path: AtticusVPN-Server-v0.6.2-unsigned.apk
+          if-no-files-found: error
