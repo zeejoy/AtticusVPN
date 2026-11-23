@@ -27,7 +27,7 @@ jobs:
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "ndk;29.0.14206865"'
       - name: Build native engine
         shell: pwsh
-        run: ./native-engine/build-aar.ps1 -AndroidNdk (Join-Path $env:ANDROID_HOME 'ndk/29.0.14206865')
+        run: ./native-engine/build-aar.ps1 -GoExe (Join-Path (go env GOROOT) 'bin/go') -AndroidNdk (Join-Path $env:ANDROID_HOME 'ndk/29.0.14206865')
       - name: Build release APK and check its manifest
         run: |
           sh gradlew --no-daemon :app:assembleRelease :app:assembleDebug
