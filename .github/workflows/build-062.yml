@@ -24,7 +24,7 @@ jobs:
           go-version: '1.27.3'
           cache: false
       - name: Install Android build inputs
-        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0' 'ndk;29.0.14206865'
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;36.0.0" "ndk;29.0.14206865"'
       - name: Build native engine
         shell: pwsh
         run: ./native-engine/build-aar.ps1 -AndroidNdk (Join-Path $env:ANDROID_HOME 'ndk/29.0.14206865')
