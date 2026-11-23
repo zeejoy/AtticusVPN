@@ -18,7 +18,7 @@
     <string name="terminal_settings_failed">تعذرت قراءة إعدادات الخادم. أعد فتح التطبيق.</string>
     <string name="terminal_network_unavailable">لا توجد شبكة صالحة. تحقق من بيانات الجوال أو Wi-Fi ثم أعد المحاولة.</string>
     <string name="terminal_network_timeout">انتهت مهلة فحص الشبكة. تحقق من اتصال الهاتف ثم أعد المحاولة.</string>
-    <string name="terminal_https_failed">لم يُؤكَّد الوصول إلى أي من المواقع الرسمية الأربعة عبر IPv4 HTTPS؛ قد تكون المشكلة في مواقع الاختبار فقط. أعد المحاولة لاحقًا.</string>
+    <string name="terminal_https_failed">لم يُؤكَّد الوصول إلى أي من المواقع الرسمية الأربعة عبر HTTPS؛ قد تكون المشكلة في مواقع الاختبار فقط. أعد المحاولة لاحقًا.</string>
     <string name="terminal_other_vpn">شبكة VPN أخرى هي الشبكة الافتراضية. افصلها واستعد بيانات الجوال أو Wi-Fi ثم أعد الفحص.</string>
     <string name="section_expand">%1$s، اضغط للتوسيع</string>
     <string name="section_collapse">%1$s، اضغط للطي</string>
@@ -176,11 +176,11 @@
     <string name="ikev2_port_conflict">تمت ملاحظة استخدام UDP 500 / 4500؛  لم يتم بدء تشغيل IKEv2</string>
     <string name="ikev2_error">Root أو فشل فحص الجهاز؛ أعد المحاولة يدويًا</string>
     <string name="check_idle">لم يتم التحقق بعد؛ يعمل تلقائيًا عند فتح صفحة المعلومات</string>
-    <string name="check_checking">جارٍ التحقق من اتصال الهاتف بالإنترنت (IPv4 HTTPS؛ أي موقع من المواقع الأربعة يمرر/فحص DNS منفصل)…</string>
+    <string name="check_checking">جارٍ التحقق من اتصال الهاتف بالإنترنت (HTTPS؛ أي موقع من المواقع الأربعة يمرر/فحص DNS منفصل)…</string>
     <string name="check_passed">تم اجتياز فحص الإنترنت عبر الهاتف. تحقق من نتائج العميل الخاصة للوصول إلى الإنترنت للعميل.</string>
     <string name="check_passed_dns_disabled">تم اجتياز فحص الإنترنت عبر الهاتف؛ تم إيقاف تشغيل DNS المدمج. يحتاج العملاء إلى تكوين DNS صالح للعمل.</string>
     <string name="check_dns_failed">تم اجتياز فحص إنترنت الهاتف، لكن DNS غير مؤكد. حدد DNS المخصص أو حدد تلقائي، ثم احفظه وأعد المحاولة.</string>
-    <string name="check_https_failed">لم يتم التأكد من إمكانية الوصول إلى أي من المواقع الرسمية الأربعة عبر IPv4 HTTPS. تحقق من بيانات الهاتف المحمول / شبكة Wi-Fi أو أعد المحاولة لاحقًا؛ فقط مواقع الاختبار قد تكون غير قابلة للوصول.</string>
+    <string name="check_https_failed">لم يتم التأكد من إمكانية الوصول إلى أي من المواقع الرسمية الأربعة عبر HTTPS. تحقق من بيانات الهاتف المحمول / شبكة Wi-Fi أو أعد المحاولة لاحقًا؛ فقط مواقع الاختبار قد تكون غير قابلة للوصول.</string>
     <string name="check_timeout">انتهت مهلة التحقق. تحقق من شبكة الهاتف وأعد المحاولة. لم تحدد هذه النتيجة سبب مشكلة العميل.</string>
     <string name="check_unavailable">الشبكة الفعلية للهاتف غير متاحة. تحقق من بيانات الهاتف المحمول / شبكة Wi-Fi وأعد المحاولة؛ لا يحتاج الخادم إلى البدء لإجراء هذا الفحص.</string>
     <string name="check_cancelled">أُلغي الفحص</string>

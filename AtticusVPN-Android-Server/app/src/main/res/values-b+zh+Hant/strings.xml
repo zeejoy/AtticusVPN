@@ -18,7 +18,7 @@
     <string name="terminal_settings_failed">無法讀取伺服器設定，請重新開啟應用程式。</string>
     <string name="terminal_network_unavailable">目前網路無法使用，請檢查行動數據或 Wi-Fi 後重測。</string>
     <string name="terminal_network_timeout">網路檢測逾時，請檢查手機網路後重測。</string>
-    <string name="terminal_https_failed">四個官網均未確認可經 IPv4 HTTPS 存取，可能只有檢測網站無法連線，請稍後重測。</string>
+    <string name="terminal_https_failed">四個官網均未確認可經 HTTPS 存取，可能只有檢測網站無法連線，請稍後重測。</string>
     <string name="terminal_other_vpn">預設網路是其他 VPN，請先關閉它並恢復行動數據或 Wi-Fi，再重新檢測。</string>
     <string name="section_expand">%1$s，點選展開</string>
     <string name="section_collapse">%1$s，點選收起</string>
@@ -176,11 +176,11 @@
     <string name="ikev2_port_conflict">觀察到 UDP 500 / 4500 正在使用；未啟動 IKEv2</string>
     <string name="ikev2_error">Root 或裝置檢查異常；請手動重試</string>
     <string name="check_idle">尚未檢測；開啟資訊頁後自動檢測</string>
-    <string name="check_checking">正在檢測手機出口（IPv4 HTTPS，四個官網任意一個成功即通過／獨立 DNS 檢查）…</string>
+    <string name="check_checking">正在檢測手機出口（HTTPS，四個官網任意一個成功即通過／獨立 DNS 檢查）…</string>
     <string name="check_passed">手機出口檢測通過。用戶端上網請看用戶端檢測結果。</string>
     <string name="check_passed_dns_disabled">手機出口檢測通過；內建 DNS 已關閉。用戶端需設定可用的 DNS。</string>
     <string name="check_dns_failed">手機出口檢測通過，但上游 DNS 尚未確認。請檢查自訂 DNS，或切回自動後儲存重試。</string>
-    <string name="check_https_failed">四個官網均未確認可經 IPv4 HTTPS 存取。請檢查行動數據／Wi-Fi，或稍後重測；也可能只有檢測網站無法連線。</string>
+    <string name="check_https_failed">四個官網均未確認可經 HTTPS 存取。請檢查行動數據／Wi-Fi，或稍後重測；也可能只有檢測網站無法連線。</string>
     <string name="check_timeout">檢測逾時。請檢查手機網路後重測；此結果不能確定用戶端故障原因。</string>
     <string name="check_unavailable">手機實體網路無法使用。請檢查行動數據／Wi-Fi 後重新檢測；檢測不需要先啟動伺服器。</string>
     <string name="check_cancelled">檢測已取消</string>

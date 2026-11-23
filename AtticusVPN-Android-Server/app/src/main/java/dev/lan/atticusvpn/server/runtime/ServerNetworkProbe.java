@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Inet4Address;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -46,7 +45,7 @@ import dev.lan.atticusvpn.server.BuildConfig;
 
 /**
  * 只检查服务器绑定的物理网络出口，不会标记远端 Peer 已能上网。
- * 域名解析和 HTTPS 都绑定选中的物理 Network，连接只选 IPv4，避免原生 IPv6 误判。
+ * 域名解析和 HTTPS 都绑定选中的物理 Network，HTTPS 可经 IPv4 或 IPv6 访问。
  * 四个独立站点同时检测，任一通过即确认出口；DNS 是单独的诊断提示，不否定 HTTPS 成功。
  * 使用进程共享的有界线程池，不为每轮新建线程；取消会关闭本轮的全部 HTTP / DNS 连接。
  * 系统域名解析在旧版 Android 上不可强制中断，因此也必须受共享线程池的数量上限约束。
@@ -205,32 +204,47 @@ public final class ServerNetworkProbe {
 
     /** 平台 CA、HTTPS 主机名和标准 SNI；不使用宽松信任管理器，不跟随重定向。 */
     private static boolean https(final Network network, final String host, final Session session) {
-        String stage = "DNS";
+        final List<InetAddress> addresses;
         try {
-            final InetAddress address = firstIpv4(network.getAllByName(host));
-            if (address == null || session.isCancelled()) return false;
-            stage = "TCP";
-            try (Socket raw = network.getSocketFactory().createSocket()) {
-                session.track(raw);
-                raw.connect(new InetSocketAddress(address, 443), session.timeout(CHECK_TIMEOUT_MS));
-                raw.setSoTimeout(session.timeout(CHECK_TIMEOUT_MS));
-                stage = "TLS";
-                final SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-                try (SSLSocket tls = (SSLSocket) factory.createSocket(raw, host, 443, true)) {
-                    session.track(tls);
-                    tls.setSoTimeout(session.timeout(CHECK_TIMEOUT_MS));
-                    final SSLParameters parameters = tls.getSSLParameters();
-                    parameters.setEndpointIdentificationAlgorithm("HTTPS");
-                    parameters.setServerNames(Collections.singletonList(new SNIHostName(host)));
-                    tls.setSSLParameters(parameters);
-                    tls.startHandshake();
-                    if (session.isCancelled()) return false;
-                    stage = "HTTP";
-                    tls.setSoTimeout(session.timeout(CHECK_TIMEOUT_MS));
-                    tls.getOutputStream().write(httpRequest(host));
-                    tls.getOutputStream().flush();
-                    return successfulStatus(readStatusLine(tls.getInputStream()));
-                }
+            addresses = probeAddresses(network.getAllByName(host));
+        } catch (final IOException | RuntimeException error) {
+            return false;
+        }
+        for (int i = 0; i < addresses.size(); i++) {
+            if (session.isCancelled()) return false;
+            final long remaining = session.deadlineNanos - System.nanoTime();
+            if (remaining <= 0) return false;
+            // Reserve time for the other address family when the preferred route stalls.
+            final long deadline = System.nanoTime() + remaining / (addresses.size() - i);
+            if (httpsAddress(network, host, addresses.get(i), session, deadline)) return true;
+        }
+        return false;
+    }
+
+    private static boolean httpsAddress(final Network network, final String host,
+                                       final InetAddress address, final Session session,
+                                       final long deadline) {
+        String stage = "TCP";
+        try (Socket raw = network.getSocketFactory().createSocket()) {
+            session.track(raw);
+            raw.connect(new InetSocketAddress(address, 443), session.timeoutUntil(deadline, CHECK_TIMEOUT_MS));
+            raw.setSoTimeout(session.timeoutUntil(deadline, CHECK_TIMEOUT_MS));
+            stage = "TLS";
+            final SSLSocketFactory factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            try (SSLSocket tls = (SSLSocket) factory.createSocket(raw, host, 443, true)) {
+                session.track(tls);
+                tls.setSoTimeout(session.timeoutUntil(deadline, CHECK_TIMEOUT_MS));
+                final SSLParameters parameters = tls.getSSLParameters();
+                parameters.setEndpointIdentificationAlgorithm("HTTPS");
+                parameters.setServerNames(Collections.singletonList(new SNIHostName(host)));
+                tls.setSSLParameters(parameters);
+                tls.startHandshake();
+                if (session.isCancelled()) return false;
+                stage = "HTTP";
+                tls.setSoTimeout(session.timeoutUntil(deadline, CHECK_TIMEOUT_MS));
+                tls.getOutputStream().write(httpRequest(host));
+                tls.getOutputStream().flush();
+                return successfulStatus(readStatusLine(tls.getInputStream()));
             }
         } catch (final IOException | RuntimeException error) {
             // 仅调试版记录阶段和异常类型，不记录消息、堆栈、地址或请求正文。
@@ -242,12 +256,16 @@ public final class ServerNetworkProbe {
         }
     }
 
-    /** 测试只确认 IPv4 出口，不回退 IPv6，也不在未指定 Network 上重新解析。 */
-    static InetAddress firstIpv4(final InetAddress[] addresses) {
+    /** Try one address per family, in the physical network resolver's order. */
+    static List<InetAddress> probeAddresses(final InetAddress[] addresses) {
+        final List<InetAddress> candidates = new ArrayList<>(2);
         for (final InetAddress address : addresses) {
-            if (address instanceof Inet4Address) return address;
+            if (candidates.isEmpty() || !candidates.get(0).getClass().equals(address.getClass())) {
+                candidates.add(address);
+                if (candidates.size() == 2) break;
+            }
         }
-        return null;
+        return candidates;
     }
 
     static boolean successfulStatus(final String status) {
@@ -381,7 +399,11 @@ public final class ServerNetworkProbe {
         boolean isCancelled() { return closed || Thread.currentThread().isInterrupted(); }
 
         int timeout(final int maximumMs) throws IOException {
-            final long remainingNanos = deadlineNanos - System.nanoTime();
+            return timeoutUntil(deadlineNanos, maximumMs);
+        }
+
+        int timeoutUntil(final long deadline, final int maximumMs) throws IOException {
+            final long remainingNanos = Math.min(deadline, deadlineNanos) - System.nanoTime();
             if (isCancelled() || remainingNanos <= 0) throw new IOException("probe deadline");
             final long millis = TimeUnit.NANOSECONDS.toMillis(remainingNanos);
             return (int) Math.max(1L, Math.min(maximumMs, millis));

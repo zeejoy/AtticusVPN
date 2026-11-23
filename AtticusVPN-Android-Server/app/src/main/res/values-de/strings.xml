@@ -18,7 +18,7 @@
     <string name="terminal_settings_failed">Servereinstellungen konnten nicht gelesen werden. App erneut öffnen.</string>
     <string name="terminal_network_unavailable">Kein nutzbares Netzwerk. Mobilfunk oder WLAN prüfen und erneut versuchen.</string>
     <string name="terminal_network_timeout">Zeitüberschreitung der Netzwerkprüfung. Telefonverbindung prüfen und erneut versuchen.</string>
-    <string name="terminal_https_failed">Keines der vier offiziellen Ziele ist über IPv4 HTTPS bestätigt erreichbar; eventuell sind nur die Testseiten betroffen. Später erneut versuchen.</string>
+    <string name="terminal_https_failed">Keines der vier offiziellen Ziele ist über HTTPS bestätigt erreichbar; eventuell sind nur die Testseiten betroffen. Später erneut versuchen.</string>
     <string name="terminal_other_vpn">Ein anderes VPN ist das Standardnetz. Trennen, Mobilfunk oder WLAN wiederherstellen und erneut prüfen.</string>
     <string name="section_expand">%1$s, zum Ausklappen tippen</string>
     <string name="section_collapse">%1$s, zum Einklappen tippen</string>
@@ -176,11 +176,11 @@
     <string name="ikev2_port_conflict">UDP 500 / 4500 Nutzung beobachtet; IKEv2 wurde nicht gestartet</string>
     <string name="ikev2_error">Root oder Geräteprüfung fehlgeschlagen; Versuchen Sie es manuell erneut</string>
     <string name="check_idle">Noch nicht überprüft; wird automatisch ausgeführt, wenn die Informationsseite geöffnet wird</string>
-    <string name="check_checking">Überprüfung der Internetverbindung des Telefons (IPv4 HTTPS; jede von vier Websites besteht / separate DNS-Prüfung)…</string>
+    <string name="check_checking">Überprüfung der Internetverbindung des Telefons (HTTPS; jede von vier Websites besteht / separate DNS-Prüfung)…</string>
     <string name="check_passed">Telefon-Internet-Check bestanden. Überprüfen Sie die eigenen Ergebnisse des Kunden für den Internetzugang des Kunden.</string>
     <string name="check_passed_dns_disabled">Telefon-Internet-Check bestanden; Der eingebaute DNS ist ausgeschaltet. Clients benötigen eine funktionierende DNS-Konfiguration.</string>
     <string name="check_dns_failed">Telefon-Internetprüfung bestanden, aber Upstream DNS ist unbestätigt. Überprüfen Sie das benutzerdefinierte DNS oder wählen Sie „Automatisch“ aus, speichern Sie es und versuchen Sie es erneut.</string>
-    <string name="check_https_failed">Keine der vier offiziellen Websites ist über IPv4 HTTPS erreichbar. Überprüfen Sie die mobilen Daten/WLAN oder versuchen Sie es später noch einmal. Nur die Teststandorte sind möglicherweise nicht erreichbar.</string>
+    <string name="check_https_failed">Keine der vier offiziellen Websites ist über HTTPS erreichbar. Überprüfen Sie die mobilen Daten/WLAN oder versuchen Sie es später noch einmal. Nur die Teststandorte sind möglicherweise nicht erreichbar.</string>
     <string name="check_timeout">Zeitüberschreitung bei der Prüfung. Überprüfen Sie das Netzwerk des Telefons und versuchen Sie es erneut. Dieses Ergebnis identifiziert nicht die Ursache eines Clientproblems.</string>
     <string name="check_unavailable">Das physische Netzwerk des Telefons ist nicht verfügbar. Überprüfen Sie die mobilen Daten/WLAN und versuchen Sie es erneut. Für diese Prüfung muss der Server nicht gestartet werden.</string>
     <string name="check_cancelled">Prüfung abgebrochen</string>

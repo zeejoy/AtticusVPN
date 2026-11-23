@@ -18,7 +18,7 @@
     <string name="terminal_settings_failed">Pengaturan server tidak dapat dibaca. Buka ulang aplikasi.</string>
     <string name="terminal_network_unavailable">Tidak ada jaringan yang dapat digunakan. Periksa data seluler atau Wi-Fi lalu coba lagi.</string>
     <string name="terminal_network_timeout">Pemeriksaan jaringan habis waktu. Periksa koneksi ponsel lalu coba lagi.</string>
-    <string name="terminal_https_failed">Akses IPv4 HTTPS ke empat situs resmi belum terkonfirmasi; mungkin hanya situs uji yang tidak dapat diakses. Coba lagi nanti.</string>
+    <string name="terminal_https_failed">Akses HTTPS ke empat situs resmi belum terkonfirmasi; mungkin hanya situs uji yang tidak dapat diakses. Coba lagi nanti.</string>
     <string name="terminal_other_vpn">VPN lain menjadi jaringan default. Putuskan, pulihkan data seluler atau Wi-Fi, lalu periksa lagi.</string>
     <string name="section_expand">%1$s, ketuk untuk membuka</string>
     <string name="section_collapse">%1$s, ketuk untuk menutup</string>
@@ -176,11 +176,11 @@
     <string name="ikev2_port_conflict">Penggunaan UDP 500 / 4500 diamati;  IKEv2 belum dimulai</string>
     <string name="ikev2_error">Root atau pemeriksaan perangkat gagal; coba lagi secara manual</string>
     <string name="check_idle">Belum diperiksa; berjalan secara otomatis ketika halaman informasi terbuka</string>
-    <string name="check_checking">Memeriksa koneksi Internet telepon ( IPv4 HTTPS ; salah satu dari empat situs web lolos / pemeriksaan DNS terpisah)…</string>
+    <string name="check_checking">Memeriksa koneksi Internet telepon ( HTTPS ; salah satu dari empat situs web lolos / pemeriksaan DNS terpisah)…</string>
     <string name="check_passed">Pemeriksaan Internet telepon berhasil. Periksa hasil klien sendiri untuk akses Internet klien.</string>
     <string name="check_passed_dns_disabled">Pemeriksaan Internet telepon berhasil; DNS bawaan mati. Klien memerlukan konfigurasi DNS yang berfungsi.</string>
     <string name="check_dns_failed">Pemeriksaan Internet telepon berhasil, tetapi DNS upstream belum dikonfirmasi. Centang DNS khusus atau pilih Otomatis, simpan dan coba lagi.</string>
-    <string name="check_https_failed">Tak satu pun dari empat situs web resmi yang dipastikan dapat dijangkau melalui IPv4 HTTPS . Periksa data seluler/Wi-Fi atau coba lagi nanti; hanya situs pengujian yang mungkin tidak dapat dijangkau.</string>
+    <string name="check_https_failed">Tak satu pun dari empat situs web resmi yang dipastikan dapat dijangkau melalui HTTPS . Periksa data seluler/Wi-Fi atau coba lagi nanti; hanya situs pengujian yang mungkin tidak dapat dijangkau.</string>
     <string name="check_timeout">Waktu pemeriksaan habis. Periksa jaringan telepon dan coba lagi. Hasil ini tidak mengidentifikasi penyebab masalah klien.</string>
     <string name="check_unavailable">Jaringan fisik telepon tidak tersedia. Periksa data seluler/Wi-Fi dan coba lagi; server tidak perlu dijalankan untuk pemeriksaan ini.</string>
     <string name="check_cancelled">Pemeriksaan dibatalkan</string>

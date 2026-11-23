@@ -17,7 +17,7 @@
     <string name="terminal_settings_failed">无法读取服务端设置，请重新打开应用。</string>
     <string name="terminal_network_unavailable">当前网络不可用，请检查移动数据或 Wi-Fi 后重测。</string>
     <string name="terminal_network_timeout">网络检测超时，请检查手机网络后重测。</string>
-    <string name="terminal_https_failed">四个官网均未确认可经 IPv4 HTTPS 访问，可能仅检测站点不可达，请稍后重测。</string>
+    <string name="terminal_https_failed">四个官网均未确认可经 HTTPS 访问，可能仅检测站点不可达，请稍后重测。</string>
     <string name="terminal_other_vpn">默认网络是其他 VPN，请先关闭它并恢复移动数据或 Wi-Fi，再重新检测。</string>
     <string name="section_expand">%1$s，点击展开</string>
     <string name="section_collapse">%1$s，点击收起</string>
@@ -178,11 +178,11 @@
     <string name="ikev2_port_conflict">观察到 UDP 500 / 4500 占用；未启动 IKEv2</string>
     <string name="ikev2_error">Root 或设备检查异常；请手动重试</string>
     <string name="check_idle">尚未检测；打开信息页后自动检测</string>
-    <string name="check_checking">正在检测手机出口（IPv4 HTTPS，四个官网任意一个成功即通过 / 独立 DNS 检查）…</string>
+    <string name="check_checking">正在检测手机出口（HTTPS，四个官网任意一个成功即通过 / 独立 DNS 检查）…</string>
     <string name="check_passed">手机出口检测通过。客户端上网请看客户端检测结果。</string>
     <string name="check_passed_dns_disabled">手机出口检测通过；内置 DNS 已关闭。客户端需配置可用 DNS。</string>
     <string name="check_dns_failed">手机出口检测通过，但上游 DNS 未确认。请检查自定义 DNS，或切回自动后保存重试。</string>
-    <string name="check_https_failed">四个官网均未确认可经 IPv4 HTTPS 访问。请检查移动数据 / Wi-Fi，或稍后重测；也可能仅检测站点不可达。</string>
+    <string name="check_https_failed">四个官网均未确认可经 HTTPS 访问。请检查移动数据 / Wi-Fi，或稍后重测；也可能仅检测站点不可达。</string>
     <string name="check_timeout">检测超时。请检查手机网络后重测；此结果不能确定客户端故障原因。</string>
     <string name="check_unavailable">手机物理网络不可用。请检查移动数据 / Wi-Fi 后重新检测；检测不要求先启动服务器。</string>
     <string name="check_cancelled">检测已取消</string>
