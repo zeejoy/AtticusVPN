@@ -49,7 +49,7 @@ android {
             versionNameSuffix = "-test-debug"
         }
         release {
-            resValue("string", "channel_app_name", "AtticusVPN · Stable")
+            resValue("string", "channel_app_name", "AtticusVPN")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(

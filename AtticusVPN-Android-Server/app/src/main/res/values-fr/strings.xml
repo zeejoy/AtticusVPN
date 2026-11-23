@@ -18,7 +18,7 @@
     <string name="terminal_settings_failed">Impossible de lire les paramètres. Rouvrez l’application.</string>
     <string name="terminal_network_unavailable">Aucun réseau utilisable. Vérifiez les données mobiles ou le Wi-Fi, puis réessayez.</string>
     <string name="terminal_network_timeout">La vérification réseau a expiré. Vérifiez la connexion du téléphone et réessayez.</string>
-    <string name="terminal_https_failed">Aucun des quatre sites officiels n’est confirmé accessible en IPv4 HTTPS ; seuls ces sites sont peut-être indisponibles. Réessayez plus tard.</string>
+    <string name="terminal_https_failed">Aucun des quatre sites officiels n’est confirmé accessible en HTTPS ; seuls ces sites sont peut-être indisponibles. Réessayez plus tard.</string>
     <string name="terminal_other_vpn">Un autre VPN est le réseau par défaut. Déconnectez-le, rétablissez les données mobiles ou le Wi-Fi et revérifiez.</string>
     <string name="section_expand">%1$s, toucher pour développer</string>
     <string name="section_collapse">%1$s, toucher pour réduire</string>
@@ -176,11 +176,11 @@
     <string name="ikev2_port_conflict">Utilisation de UDP 500 / 4500 observée ;  IKEv2 n\'a pas été démarré</string>
     <string name="ikev2_error">Root ou la vérification du périphérique a échoué ; réessayez manuellement</string>
     <string name="check_idle">Pas encore vérifié ; s\'exécute automatiquement lorsque la page d\'informations s\'ouvre</string>
-    <string name="check_checking">Vérification de la connexion Internet du téléphone ( IPv4 HTTPS ; l\'un des quatre sites Web réussit / vérification DNS séparée)…</string>
+    <string name="check_checking">Vérification de la connexion Internet du téléphone ( HTTPS ; l\'un des quatre sites Web réussit / vérification DNS séparée)…</string>
     <string name="check_passed">Vérification Internet par téléphone réussie. Vérifiez les propres résultats du client pour l’accès Internet du client.</string>
     <string name="check_passed_dns_disabled">Vérification Internet téléphonique réussie ; Le DNS intégré est désactivé. Les clients ont besoin d\'une configuration DNS fonctionnelle.</string>
     <string name="check_dns_failed">La vérification Internet par téléphone a réussi, mais le DNS en amont n\'est pas confirmé. Cochez DNS personnalisé ou sélectionnez Automatique, enregistrez et réessayez.</string>
-    <string name="check_https_failed">Aucun des quatre sites Web officiels n\'est confirmé accessible via IPv4 HTTPS. Vérifiez les données mobiles/Wi-Fi ou réessayez plus tard ; seuls les sites de test peuvent être inaccessibles.</string>
+    <string name="check_https_failed">Aucun des quatre sites Web officiels n\'est confirmé accessible via HTTPS. Vérifiez les données mobiles/Wi-Fi ou réessayez plus tard ; seuls les sites de test peuvent être inaccessibles.</string>
     <string name="check_timeout">Le délai de vérification a expiré. Vérifiez le réseau du téléphone et réessayez. Ce résultat n\'identifie pas la cause d\'un problème client.</string>
     <string name="check_unavailable">Le réseau physique du téléphone n\'est pas disponible. Vérifiez les données mobiles/Wi-Fi et réessayez ; le serveur n\'a pas besoin d\'être démarré pour cette vérification.</string>
     <string name="check_cancelled">Vérification annulée</string>

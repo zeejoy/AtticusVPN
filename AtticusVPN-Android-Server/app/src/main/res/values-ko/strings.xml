@@ -18,7 +18,7 @@
     <string name="terminal_settings_failed">서버 설정을 읽을 수 없습니다. 앱을 다시 여세요.</string>
     <string name="terminal_network_unavailable">사용 가능한 네트워크가 없습니다. 모바일 데이터나 Wi-Fi를 확인하세요.</string>
     <string name="terminal_network_timeout">네트워크 확인 시간이 초과되었습니다. 휴대폰 연결을 확인하세요.</string>
-    <string name="terminal_https_failed">공식 사이트 4곳 모두 IPv4 HTTPS 접근을 확인하지 못했습니다. 테스트 사이트만 접근 불가일 수 있습니다. 나중에 다시 시도하세요.</string>
+    <string name="terminal_https_failed">공식 사이트 4곳 모두 HTTPS 접근을 확인하지 못했습니다. 테스트 사이트만 접근 불가일 수 있습니다. 나중에 다시 시도하세요.</string>
     <string name="terminal_other_vpn">다른 VPN이 기본 네트워크입니다. 연결을 끊고 모바일 데이터나 Wi-Fi를 복원한 뒤 다시 확인하세요.</string>
     <string name="section_expand">%1$s, 탭하여 펼치기</string>
     <string name="section_collapse">%1$s, 탭하여 접기</string>
@@ -176,11 +176,11 @@
     <string name="ikev2_port_conflict">UDP 500 / 4500 사용법이 관찰되었습니다.  IKEv2가 시작되지 않았습니다.</string>
     <string name="ikev2_error">Root 또는 장치 확인에 실패했습니다. 수동으로 다시 시도</string>
     <string name="check_idle">아직 확인되지 않았습니다. 정보 페이지가 열리면 자동으로 실행됩니다.</string>
-    <string name="check_checking">휴대폰의 인터넷 연결 확인 중( IPv4 HTTPS , 4개 웹사이트 중 하나가 통과 / 별도 DNS 확인)…</string>
+    <string name="check_checking">휴대폰의 인터넷 연결 확인 중( HTTPS , 4개 웹사이트 중 하나가 통과 / 별도 DNS 확인)…</string>
     <string name="check_passed">전화 인터넷 확인을 통과했습니다. 클라이언트 인터넷 액세스에 대한 클라이언트 자체 결과를 확인합니다.</string>
     <string name="check_passed_dns_disabled">전화 인터넷 확인을 통과했습니다. 내장 DNS가 꺼져 있습니다. 클라이언트에는 작동하는 DNS 구성이 필요합니다.</string>
     <string name="check_dns_failed">전화 인터넷 확인을 통과했지만 업스트림 DNS가 확인되지 않았습니다. 사용자 정의 DNS를 확인하거나 자동을 선택하고 저장한 후 다시 시도하세요.</string>
-    <string name="check_https_failed">4개의 공식 웹사이트 중 어느 것도 IPv4 HTTPS 를 통해 연결할 수 있는 것으로 확인되지 않았습니다. 모바일 데이터/Wi-Fi를 확인하거나 나중에 다시 시도하세요. 테스트 사이트에만 접근할 수 없습니다.</string>
+    <string name="check_https_failed">4개의 공식 웹사이트 중 어느 것도 HTTPS 를 통해 연결할 수 있는 것으로 확인되지 않았습니다. 모바일 데이터/Wi-Fi를 확인하거나 나중에 다시 시도하세요. 테스트 사이트에만 접근할 수 없습니다.</string>
     <string name="check_timeout">확인 시간이 초과되었습니다. 휴대전화의 네트워크를 확인하고 다시 시도하세요. 이 결과는 클라이언트 문제의 원인을 식별하지 못합니다.</string>
     <string name="check_unavailable">휴대전화의 물리적 네트워크를 사용할 수 없습니다. 모바일 데이터/Wi-Fi를 확인하고 다시 시도하세요. 이 확인을 위해 서버를 시작할 필요는 없습니다.</string>
     <string name="check_cancelled">확인 취소됨</string>

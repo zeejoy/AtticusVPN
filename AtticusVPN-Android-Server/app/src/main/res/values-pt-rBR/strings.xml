@@ -18,7 +18,7 @@
     <string name="terminal_settings_failed">Não foi possível ler as configurações. Reabra o app.</string>
     <string name="terminal_network_unavailable">Nenhuma rede utilizável. Verifique dados móveis ou Wi-Fi e tente novamente.</string>
     <string name="terminal_network_timeout">A verificação de rede expirou. Verifique a conexão do telefone e tente novamente.</string>
-    <string name="terminal_https_failed">Nenhum dos quatro sites oficiais teve acesso IPv4 HTTPS confirmado; talvez apenas esses sites estejam indisponíveis. Tente mais tarde.</string>
+    <string name="terminal_https_failed">Nenhum dos quatro sites oficiais teve acesso HTTPS confirmado; talvez apenas esses sites estejam indisponíveis. Tente mais tarde.</string>
     <string name="terminal_other_vpn">Outra VPN é a rede padrão. Desconecte-a, restaure dados móveis ou Wi-Fi e verifique novamente.</string>
     <string name="section_expand">%1$s, toque para expandir</string>
     <string name="section_collapse">%1$s, toque para recolher</string>
@@ -176,11 +176,11 @@
     <string name="ikev2_port_conflict">Uso de UDP 500 / 4500 observado; IKEv2 não foi iniciado</string>
     <string name="ikev2_error">Root ou falha na verificação do dispositivo; tente novamente manualmente</string>
     <string name="check_idle">Ainda não verificado; é executado automaticamente quando a página de informações é aberta</string>
-    <string name="check_checking">Verificando a conexão com a Internet do telefone (IPv4 HTTPS; qualquer um dos quatro sites passa / verificação DNS separada)…</string>
+    <string name="check_checking">Verificando a conexão com a Internet do telefone (HTTPS; qualquer um dos quatro sites passa / verificação DNS separada)…</string>
     <string name="check_passed">A verificação da Internet por telefone foi aprovada. Verifique os resultados do próprio cliente para acesso à Internet do cliente.</string>
     <string name="check_passed_dns_disabled">Verificação de Internet telefônica aprovada; DNS integrado está desligado. Os clientes precisam de uma configuração DNS funcional.</string>
     <string name="check_dns_failed">A verificação da Internet do telefone foi aprovada, mas o upstream DNS não foi confirmado. Verifique DNS personalizado ou selecione Automático, salve e tente novamente.</string>
-    <string name="check_https_failed">Nenhum dos quatro sites oficiais está confirmado como acessível através de IPv4 HTTPS. Verifique os dados móveis/Wi-Fi ou tente novamente mais tarde; apenas os locais de teste podem estar inacessíveis.</string>
+    <string name="check_https_failed">Nenhum dos quatro sites oficiais está confirmado como acessível através de HTTPS. Verifique os dados móveis/Wi-Fi ou tente novamente mais tarde; apenas os locais de teste podem estar inacessíveis.</string>
     <string name="check_timeout">A verificação expirou. Verifique a rede do telefone e tente novamente. Este resultado não identifica a causa de um problema do cliente.</string>
     <string name="check_unavailable">A rede física do telefone não está disponível. Verifique os dados móveis/Wi-Fi e tente novamente; o servidor não precisa ser iniciado para esta verificação.</string>
     <string name="check_cancelled">Verificação cancelada</string>

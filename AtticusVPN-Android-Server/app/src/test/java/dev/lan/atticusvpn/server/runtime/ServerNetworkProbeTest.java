@@ -13,12 +13,14 @@ import static org.junit.Assert.*;
 
 /** 离线构造真实 DNS wire-format，覆盖错事务、截断、NXDOMAIN 和空响应等误报风险。 */
 public final class ServerNetworkProbeTest {
-    @Test public void selectsIpv4WithoutIpv6Fallback() throws Exception {
+    @Test public void selectsOneAddressPerFamilyInResolverOrder() throws Exception {
         final InetAddress v6 = InetAddress.getByAddress(new byte[16]);
         final InetAddress v4 = InetAddress.getByAddress(new byte[]{(byte)192, 0, 2, 1});
-        assertSame(v4, ServerNetworkProbe.firstIpv4(new InetAddress[]{v6, v4}));
-        assertNull(ServerNetworkProbe.firstIpv4(new InetAddress[]{v6}));
-        assertNull(ServerNetworkProbe.firstIpv4(new InetAddress[0]));
+        assertEquals(Arrays.asList(v6, v4), ServerNetworkProbe.probeAddresses(new InetAddress[]{v6, v6, v4}));
+        assertEquals(Arrays.asList(v4, v6), ServerNetworkProbe.probeAddresses(new InetAddress[]{v4, v6}));
+        assertEquals(Arrays.asList(v6), ServerNetworkProbe.probeAddresses(new InetAddress[]{v6}));
+        assertEquals(Arrays.asList(v4), ServerNetworkProbe.probeAddresses(new InetAddress[]{v4}));
+        assertTrue(ServerNetworkProbe.probeAddresses(new InetAddress[0]).isEmpty());
     }
 
     @Test public void validatesAuthenticatedHttpStatusStrictly() {

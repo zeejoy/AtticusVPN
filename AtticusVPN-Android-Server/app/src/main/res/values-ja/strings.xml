@@ -18,7 +18,7 @@
     <string name="terminal_settings_failed">サーバー設定を読めません。アプリを開き直してください。</string>
     <string name="terminal_network_unavailable">利用可能なネットワークがありません。モバイル通信か Wi-Fi を確認してください。</string>
     <string name="terminal_network_timeout">ネットワーク確認がタイムアウトしました。端末の接続を確認してください。</string>
-    <string name="terminal_https_failed">4 つの公式サイトのいずれも IPv4 HTTPS での到達を確認できません。テストサイトだけの問題かもしれません。後で再試行してください。</string>
+    <string name="terminal_https_failed">4 つの公式サイトのいずれも HTTPS での到達を確認できません。テストサイトだけの問題かもしれません。後で再試行してください。</string>
     <string name="terminal_other_vpn">別の VPN が既定の接続です。切断してモバイル通信か Wi-Fi に戻し、再確認してください。</string>
     <string name="section_expand">%1$s、タップして展開</string>
     <string name="section_collapse">%1$s、タップして折りたたむ</string>
@@ -176,11 +176,11 @@
     <string name="ikev2_port_conflict">UDP 500 / 4500 の使用が観察されました。  IKEv2 は開始されていません</string>
     <string name="ikev2_error">Root またはデバイスのチェックに失敗しました。手動で再試行してください</string>
     <string name="check_idle">まだチェックされていません。情報ページが開くと自動的に実行されます</string>
-    <string name="check_checking">携帯電話のインターネット接続をチェックしています ( IPv4 HTTPS ; 4 つの Web サイトのいずれかが合格 / 個別の DNS チェック)…</string>
+    <string name="check_checking">携帯電話のインターネット接続をチェックしています ( HTTPS ; 4 つの Web サイトのいずれかが合格 / 個別の DNS チェック)…</string>
     <string name="check_passed">電話インターネットチェックに合格しました。クライアントのインターネット アクセスに関するクライアント自身の結果を確認します。</string>
     <string name="check_passed_dns_disabled">電話インターネットチェックに合格しました。組み込みの DNS がオフになっています。クライアントには、有効な DNS 構成が必要です。</string>
     <string name="check_dns_failed">電話インターネット チェックは合格しましたが、アップストリーム DNS は未確認です。カスタム DNS をチェックするか、自動を選択して保存し、再試行します。</string>
-    <string name="check_https_failed">4 つの公式 Web サイトのいずれも、 IPv4 HTTPS 経由でアクセスできることは確認されていません。モバイルデータ/Wi-Fiを確認するか、後で再試行してください。テストサイトのみがアクセスできない可能性があります。</string>
+    <string name="check_https_failed">4 つの公式 Web サイトのいずれも、 HTTPS 経由でアクセスできることは確認されていません。モバイルデータ/Wi-Fiを確認するか、後で再試行してください。テストサイトのみがアクセスできない可能性があります。</string>
     <string name="check_timeout">チェックがタイムアウトしました。電話機のネットワークを確認して、再試行してください。この結果では、クライアントの問題の原因は特定されません。</string>
     <string name="check_unavailable">電話機の物理ネットワークが利用できません。モバイルデータ/Wi-Fiを確認して再試行してください。このチェックのためにサーバーを起動する必要はありません。</string>
     <string name="check_cancelled">確認をキャンセルしました</string>

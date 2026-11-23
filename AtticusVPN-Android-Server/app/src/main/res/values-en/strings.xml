@@ -17,7 +17,7 @@
     <string name="terminal_settings_failed">Could not read server settings. Reopen the app.</string>
     <string name="terminal_network_unavailable">No usable network. Check mobile data or Wi-Fi and retry.</string>
     <string name="terminal_network_timeout">Network check timed out. Check the phone network and retry.</string>
-    <string name="terminal_https_failed">None of the four official websites is confirmed reachable over IPv4 HTTPS; only the test sites may be unreachable. Retry later.</string>
+    <string name="terminal_https_failed">None of the four official websites is confirmed reachable over HTTPS; only the test sites may be unreachable. Retry later.</string>
     <string name="terminal_other_vpn">Another VPN is the default network. Disconnect it, restore mobile data or Wi-Fi, and recheck.</string>
     <string name="section_expand">%1$s, tap to expand</string>
     <string name="section_collapse">%1$s, tap to collapse</string>
@@ -175,11 +175,11 @@
     <string name="ikev2_port_conflict">UDP 500 / 4500 usage observed; IKEv2 has not been started</string>
     <string name="ikev2_error">Root or device check failed; retry manually</string>
     <string name="check_idle">Not checked yet; runs automatically when the information page opens</string>
-    <string name="check_checking">Checking the phone’s Internet connection (IPv4 HTTPS; any one of four websites passes / separate DNS check)…</string>
+    <string name="check_checking">Checking the phone’s Internet connection (HTTPS; any one of four websites passes / separate DNS check)…</string>
     <string name="check_passed">Phone Internet check passed. Check the client’s own results for client Internet access.</string>
     <string name="check_passed_dns_disabled">Phone Internet check passed; built-in DNS is off. Clients need a working DNS configuration.</string>
     <string name="check_dns_failed">Phone Internet check passed, but upstream DNS is unconfirmed. Check custom DNS or select Automatic, save and retry.</string>
-    <string name="check_https_failed">None of the four official websites is confirmed reachable over IPv4 HTTPS. Check mobile data / Wi-Fi or retry later; only the test sites may be unreachable.</string>
+    <string name="check_https_failed">None of the four official websites is confirmed reachable over HTTPS. Check mobile data / Wi-Fi or retry later; only the test sites may be unreachable.</string>
     <string name="check_timeout">Check timed out. Check the phone’s network and retry. This result does not identify the cause of a client problem.</string>
     <string name="check_unavailable">The phone’s physical network is unavailable. Check mobile data / Wi-Fi and retry; the server does not need to be started for this check.</string>
     <string name="check_cancelled">Check cancelled</string>
