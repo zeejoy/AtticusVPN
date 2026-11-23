@@ -1,6 +1,6 @@
 # AtticusVPN Android Server
 
-自托管的标准 WireGuard 安卓服务端。项目作者与公开署名：**TianzeL**。STABLE 版本 0.6.0，最低 Android 7.0（API 24）。[Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0) 提供源码和原证书签名的正式 APK；已完成有限范围的真机覆盖升级检查，公网连接和后台运行等完整验收仍待完成。
+自托管的标准 WireGuard 安卓服务端。项目作者与公开署名：**TianzeL**。当前正式版为 0.6.1，最低 Android 7.0（API 24）。[Release](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.1) 提供源码和原证书签名的正式 APK。
 
 本仓库只发布现有 Android Server 功能的源码：安卓界面、纯 Java 核心、Go 用户态网络引擎、测试、界面素材及构建工具。
 不含 Windows/Android 客户端源码、Linux 服务端、私人签名、已有 APK/AAR、设备测试数据或未集成的 strongSwan 原生实验目录。
@@ -9,17 +9,17 @@
 
 ## 正式版与测试版
 
-GitHub 原 0.5.8 是第一个正式版，本次 0.6.0 是第二个正式版开发交付。既有 1.x 构件均属于 TEST 测试版，不能通过数字大小判断正式版先后。正式包名继续为 dev.lan.atticusvpn.server，versionCode 从 19 增至 20。STABLE 与 TEST 是发布渠道标识。
+0.6.1 沿用正式包名 `dev.lan.atticusvpn.server`，versionCode 从 20 增至 21。此前发布的正式版依次为 0.5.8 和 0.6.0。既有 1.x 构件均属于 TEST 测试版，不能通过数字大小判断正式版先后。STABLE 与 TEST 是发布渠道标识。
 
 0.6.0 复用测试版的新主页、设备页和 IP 信息页；液态玻璃固定取自 **TEST 1.3.0 / e934d48**。VPN 配置迁至设置，增加当前运行日志、13 种语言和锁屏后台运行权限引导。保留正式 0.5.8 的 WireGuard、撤销设备、密钥清理和配置格式；本次不迁入 Atticus Link 或 IKEv2 服务。
 
-原签名由用户保管。[正式 APK](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/AtticusVPN-Server-v0.6.0.apk) 与原 0.5.8 的签名证书一致，证书 SHA-256 为 `2ff3b123dbaa5350542e1ee3c2cc371dde487038db3553a35d5754126caeab32`。APK SHA-256 为 `074bc9e90bbdf0f4c40f365788b805c623625ff2ff50aef6ac9f3d6888dcc0cd`；非 Debug 包，通过 v2/v3 签名与 16 KiB 对齐校验。Release 同时保留源码、校验值与第三方许可/对应源码材料；源码标签与原源码附件不变。开发者自行构建的未签名 Release 与独立包名 Debug 均不能冒充正式安装包。签名校验见 [发布渠道](docs/RELEASE-CHANNELS.md)。
+原签名由用户保管。[正式 APK](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.1/AtticusVPN-Server-v0.6.1.apk) 与原 0.5.8 的签名证书一致，证书 SHA-256 为 `2ff3b123dbaa5350542e1ee3c2cc371dde487038db3553a35d5754126caeab32`。APK SHA-256 为 `9f32cd22bebe98b556d31d6ee19a3dae6597fc7289c2cf884d1a8f7707c65488`；非 Debug 包，通过 v2/v3 签名与 16 KiB 对齐校验。Release 同时保留源码、校验值与第三方许可/对应源码材料；源码标签与原源码附件不变。开发者自行构建的未签名 Release 与独立包名 Debug 均不能冒充正式安装包。签名校验见 [发布渠道](docs/RELEASE-CHANNELS.md)。
 
 2026-11-07 在 MI MAX 3（Android 10）上安装原 0.5.8、创建测试 Peer，再保留数据覆盖安装 0.6.0；安装成功、界面可打开，应用 UID、首次安装时间和测试 Peer 的名称、地址、启用状态、可导出状态保留。此检查使用新建测试配置；尚未验证既有生产配置的完整保留、服务器身份、真实 DDNS 设置、WireGuard 握手/转发、服务启停及持续后台运行，不能视为完整无损升级或公网验收。
 
-## 本次修复与验证
+## 0.6.0 历史修复与验证
 
-F01–F09 的修复与永久测试来自已核验的修复源码包；包括状态恢复、TCP 配额/半关闭、DNS 响应匹配、通知、网关日志、构建、源码保护与隐私说明。11 月 5 日的 [完整修复报告](docs/REPAIR-AND-VALIDATION-STABLE-0.6.0.md) 为历史记录。本轮实际执行结果与未运行项见 [源码发布验证](docs/SOURCE-RELEASE-0.6.0.md)。
+F01–F09 的修复与永久测试来自已核验的修复源码包；包括状态恢复、TCP 配额/半关闭、DNS 响应匹配、通知、网关日志、构建、源码保护与隐私说明。11 月 5 日的 [完整修复报告](docs/REPAIR-AND-VALIDATION-STABLE-0.6.0.md) 为历史记录。该版本实际执行结果与未运行项见 [源码发布验证](docs/SOURCE-RELEASE-0.6.0.md)。
 
 ## 功能与边界
 
@@ -29,7 +29,7 @@ F01–F09 的修复与永久测试来自已核验的修复源码包；包括状�
 - 多服务商 DDNS，按服务商显示字段；域名跟随健康公网 IPv6 更新并独立检查 AAAA 解析。
 - 共 13 种语言：简体中文、繁體中文、English、西班牙语、法语、德语、巴西葡萄牙语、俄语、阿拉伯语、印地语、日语、韩语和印尼语；深色/浅色/跟随系统，默认英语与跟随系统。
 - 手机出口检测并行请求 Cloudflare、Microsoft、百度、Bilibili 官网，严格 TLS，任一 HTTPS 2xx/3xx 通过即可确认出口；DNS 未确认是独立警告。仅固定 GET 并读取状态行，不携带用户配置、Cookie 或设备标识。
-- Root/XFRM 是用户主动触发的只读能力检查。**IKEv2 服务尚未集成，不能宣称双协议可用。**
+- 0.6.1 已移除设置中的设备能力检查入口。**IKEv2 服务尚未集成，不能宣称双协议可用。**
 
 公网 IPv6、运营商/路由器允许 UDP 入站及客户端 IPv6 能力仍是必要条件。DDNS 成功和手机出口成功都不证明远端客户端能连接。
 目前不是通用内核路由器：不支持 ICMP/任意 IP 协议互联网转发，不保证 IPv6 互联网全隧道。
@@ -89,9 +89,9 @@ APK 在 `app/build/outputs/apk/debug/app-debug.apk`。调试签名由你自己�
 
 ## 下载与贡献
 
-- [下载正式 APK：AtticusVPN-Server-v0.6.0.apk](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/AtticusVPN-Server-v0.6.0.apk)，要求 **Android 7.0+（API 24+）**。
-- [v.0.6.0 Release 与发布说明](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.0)、[独立源码 ZIP](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/AtticusVPN-Android-Server-STABLE-0.6.0-source.zip)及[版本标签源码](https://github.com/zeejoy/AtticusVPN/tree/v.0.6.0)。固定源码归档保留首次源码发布时的文档；当前发布状态以在线发布说明为准。
-- [APK SHA-256 校验文件](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/SHA256SUMS-APK-STABLE-0.6.0.txt)：`074bc9e90bbdf0f4c40f365788b805c623625ff2ff50aef6ac9f3d6888dcc0cd`。源码及对应源码归档的校验值见[源码校验文件](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.0/SHA256SUMS-STABLE-0.6.0.txt)。
+- [下载正式 APK：AtticusVPN-Server-v0.6.1.apk](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.1/AtticusVPN-Server-v0.6.1.apk)，要求 **Android 7.0+（API 24+）**。
+- [v.0.6.1 Release 与发布说明](https://github.com/zeejoy/AtticusVPN/releases/tag/v.0.6.1)、[独立源码 ZIP](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.1/AtticusVPN-Android-Server-v0.6.1-source.zip)及[版本标签源码](https://github.com/zeejoy/AtticusVPN/tree/v.0.6.1)。固定源码归档保留首次源码发布时的文档；当前发布状态以在线发布说明为准。
+- [APK SHA-256 校验文件](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.1/SHA256SUMS-v0.6.1.txt)：`9f32cd22bebe98b556d31d6ee19a3dae6597fc7289c2cf884d1a8f7707c65488`。同一校验文件也列出了两个源码归档的摘要。
 
 正式 APK 已使用原证书签名；有限覆盖升级检查不代表生产配置全面无损保留、公网握手/转发、真实 DDNS、服务启停或长期锁屏后台验收。其他 Android 设备、公网 IPv6 和运营商网络兼容性仍待测试。网络与协议限制见上文，具体签名及升级范围见[发布渠道](docs/RELEASE-CHANNELS.md)。
 
@@ -99,4 +99,4 @@ APK 在 `app/build/outputs/apk/debug/app-debug.apk`。调试签名由你自己�
 
 现有仓库保留原 Git 历史。贡献前请执行扫描与测试，不提交构建缓存、APK/AAR、私有日志、配置、签名或密钥。应在公开分支或 Pull Request 之前完成秘密检查；.gitignore 不会清除已经进入提交的内容。
 
-可额外运行 `python tools/check-go-dependency-boundary.py --go <Go可执行文件>` 与 `python -m unittest discover -s tools -p "test_*.py"`。x/crypto 的 OpenPGP 模块级告警仍需跟踪，不得引入其未维护包。公开二进制须同时提供 [desugar 对应源码](docs/CORRESPONDING-SOURCE-STABLE-0.6.0.md)。
+可额外运行 `python tools/check-go-dependency-boundary.py --go <Go可执行文件>` 与 `python -m unittest discover -s tools -p "test_*.py"`。x/crypto 的 OpenPGP 模块级告警仍需跟踪，不得引入其未维护包。公开二进制须同时提供 [desugar 对应源码](https://github.com/zeejoy/AtticusVPN/releases/download/v.0.6.1/AtticusVPN-v0.6.1-desugar-2.1.5-corresponding-source.zip)。
