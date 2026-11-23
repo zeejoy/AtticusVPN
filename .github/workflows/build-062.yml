@@ -30,7 +30,7 @@ jobs:
         run: ./native-engine/build-aar.ps1 -AndroidNdk (Join-Path $env:ANDROID_HOME 'ndk/29.0.14206865')
       - name: Build release APK and check its manifest
         run: |
-          sh gradlew --no-daemon :app:assembleRelease
+          sh gradlew --no-daemon :app:assembleRelease :app:assembleDebug
           apk=app/build/outputs/apk/release/app-release-unsigned.apk
           tools="$ANDROID_HOME/build-tools/36.0.0"
           "$tools/aapt" dump badging "$apk" > "$RUNNER_TEMP/badging.txt"
@@ -41,4 +41,17 @@ jobs:
         with:
           name: AtticusVPN-Server-v0.6.2-unsigned
           path: AtticusVPN-Server-v0.6.2-unsigned.apk
+          if-no-files-found: error
+      - name: Verify independently installable test APK
+        run: |
+          apk=app/build/outputs/apk/debug/app-debug.apk
+          tools="$ANDROID_HOME/build-tools/36.0.0"
+          "$tools/aapt" dump badging "$apk" > "$RUNNER_TEMP/debug-badging.txt"
+          grep "^package: name='dev.lan.atticusvpn.server.debug' versionCode='22' versionName='0.6.2-test-debug'" "$RUNNER_TEMP/debug-badging.txt"
+          "$tools/apksigner" verify "$apk"
+          cp "$apk" "$GITHUB_WORKSPACE/AtticusVPN-Server-v0.6.2-test.apk"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AtticusVPN-Server-v0.6.2-test
+          path: AtticusVPN-Server-v0.6.2-test.apk
           if-no-files-found: error
